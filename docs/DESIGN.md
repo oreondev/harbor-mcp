@@ -1,6 +1,6 @@
 # Harbor MCP server: design
 
-Status: design, not implemented. Version 0.2, 2026-11-03.
+Status: the read tools (section 4) are implemented and tested; nothing is released. Version 0.3, 2026-11-03.
 
 ## 1. Purpose
 
@@ -39,17 +39,17 @@ Credentials and the HTTP token are never logged, never returned in tool output a
 
 ## 4. Read tools (first release)
 
-Every read tool carries the MCP annotations `readOnlyHint: true` and `openWorldHint: true`. Lists take `query` (name filter), `page` and `pageSize` (default 25, maximum 100) and report the total, so an assistant can page instead of receiving thousands of rows. Results are JSON (`structuredContent` with an output schema) plus a short text summary.
+Every read tool carries the MCP annotations `readOnlyHint: true` and `openWorldHint: true`. Lists take `query` (name filter), `page` and `pageSize` (default 25, maximum 100) and report the total, so an assistant can page instead of receiving thousands of rows. Results are JSON (`structuredContent` with an output schema, also sent as text). Times are RFC 3339 strings in UTC, empty when Harbor has none (an artifact never pulled).
 
 | Tool | Harbor endpoints | Returns |
 |---|---|---|
 | `harbor_system_info` | `GET /systeminfo`, `GET /users/current` | version, auth mode, the identity the server runs as |
-| `harbor_list_projects` | `GET /projects` | name, ID, public, repository count, quota used and limit, auto-scan, created |
-| `harbor_get_project` | `GET /projects/{name}`, `GET /quotas?reference=project&reference_id=` | metadata, quota, CVE allowlist, retention and immutability presence |
+| `harbor_list_projects` | `GET /projects` | name, ID, public, repository count, auto-scan, proxy cache, created (quota is in `harbor_get_project`, to keep a page at one request) |
+| `harbor_get_project` | `GET /projects/{name}`, `GET /quotas?reference=project&reference_id=`, `GET /projects/{id}/immutabletagrules` | metadata, quota, CVE allowlist, whether a retention policy is set, number of immutable rules |
 | `harbor_list_repositories` | `GET /projects/{name}/repositories` | name, artifact count, pull count, last update |
 | `harbor_list_artifacts` | `GET /projects/{name}/repositories/{repo}/artifacts?with_tag=true&with_scan_overview=true` | digest, tags, size, push and pull time, scan status and severity counts |
-| `harbor_get_vulnerabilities` | `GET .../artifacts/{reference}/additions/vulnerabilities` | the scan report for one artifact, filtered by `minSeverity` (default High) and capped at 100 entries, with the total |
-| `harbor_list_robots` | `GET /robots` | name, level, project, permissions, disabled, expiry (secrets never) |
+| `harbor_get_vulnerabilities` | `GET .../artifacts/{reference}/additions/vulnerabilities` | the scan report for one artifact, most severe first, filtered by `minSeverity` (default High) and capped by `limit` (at most 100), with counts by severity; a project without a scanner (Harbor's 404 "no scanner registration") is a note, not an error |
+| `harbor_list_robots` | `GET /robots` | name, level, permissions, disabled, expiry and whether expired (secrets never); optional filters by project and name |
 | `harbor_list_members` | `GET /projects/{name}/members` | entity, type, role |
 | `harbor_list_registries` | `GET /registries` | name, type, URL, health status (credentials never) |
 | `harbor_list_replications` | `GET /replication/policies`, `GET /replication/executions?policy_id=` | policy, direction, trigger, enabled, last execution status and counts |
