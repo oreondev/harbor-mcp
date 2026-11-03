@@ -28,6 +28,10 @@ func (t *tools) register(s *mcp.Server) {
 		Description: "Harbor version, authentication mode and URLs, and the user the server acts as (with whether it is a Harbor administrator).",
 		Annotations: readOnly("Harbor system information"),
 	}, t.systemInfo)
+	t.registerProjects(s)
+	t.registerAccess(s)
+	t.registerReplication(s)
+	t.registerAdmin(s)
 }
 
 // SystemInfo is the result of harbor_system_info.

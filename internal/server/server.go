@@ -72,7 +72,7 @@ func readOnly(title string) *mcp.ToolAnnotations {
 // any secret removed.
 func (t *tools) fail(what string, err error) error {
 	msg := fmt.Sprintf("%s: %v", what, err)
-	if apiErr, ok := errors.AsType[*harbor.APIError](err); ok {
+	if apiErr, ok := asAPIError(err); ok {
 		msg = fmt.Sprintf("%s: Harbor answered %d", what, apiErr.StatusCode)
 		if apiErr.Message != "" {
 			msg += ": " + apiErr.Message
@@ -96,6 +96,9 @@ var hints = map[int]string{
 	http.StatusBadGateway:          "Harbor is unreachable behind its proxy; retry later.",
 	http.StatusServiceUnavailable:  "Harbor is unavailable; retry later.",
 }
+
+// asAPIError returns the Harbor API error inside err, if any.
+func asAPIError(err error) (*harbor.APIError, bool) { return errors.AsType[*harbor.APIError](err) }
 
 func nonEmpty(in []string) []string {
 	out := make([]string, 0, len(in))

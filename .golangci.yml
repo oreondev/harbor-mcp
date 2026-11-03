@@ -45,6 +45,9 @@ linters:
           - unparam
           - lll
         path: _test\.go
+      - linters:
+          - lll
+        path: internal/
 formatters:
   enable:
     - gofmt

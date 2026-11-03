@@ -6,7 +6,7 @@ This is an independent community project. It is not affiliated with or endorsed 
 
 ## Status
 
-In development; nothing is released yet. The design is in [docs/DESIGN.md](docs/DESIGN.md).
+In development; nothing is released yet. The twelve read tools work and are tested against a fake Harbor and Harbor 2.15; HTTP mode, the image and the registry listing come next. The design is in [docs/DESIGN.md](docs/DESIGN.md).
 
 Planned for the first release:
 
