@@ -1,0 +1,72 @@
+name: E2E Tests
+
+# Runs the built binary against a real Harbor from the official chart on kind.
+# Pushes and pull requests use the newest supported Harbor; the nightly and
+# manual runs cover every supported Harbor minor, on develop.
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+  schedule:
+    - cron: "47 3 * * *"
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: e2e-${{ github.ref }}-${{ github.event_name }}
+  cancel-in-progress: true
+
+jobs:
+  test-e2e:
+    permissions:
+      contents: read
+    name: Harbor ${{ matrix.harbor.app }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        harbor: ${{ fromJSON((github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && '[{"chart":"1.16.4","app":"2.12"},{"chart":"1.17.5","app":"2.13"},{"chart":"1.18.4","app":"2.14"},{"chart":"1.19.4","app":"2.15"}]' || '[{"chart":"1.19.4","app":"2.15"}]') }}
+    steps:
+      - name: Clone the code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+          ref: ${{ github.event_name == 'schedule' && 'develop' || '' }}
+
+      - name: Setup Go
+        uses: actions/setup-go@4b73464bb391d4059bd26b0524d20df3927bd417 # v6.3.0
+        with:
+          go-version-file: go.mod
+
+      - name: Create the kind cluster
+        run: |
+          go install sigs.k8s.io/kind@v0.33.0
+          kind create cluster --name harbor-mcp-e2e --wait 3m
+
+      - name: Install Harbor ${{ matrix.harbor.app }}
+        env:
+          CHART: ${{ matrix.harbor.chart }}
+        run: |
+          helm upgrade --install harbor harbor --repo https://helm.goharbor.io --version "$CHART" \
+            --namespace harbor --create-namespace -f test/e2e/testdata/harbor-values.yaml --wait --timeout 15m
+
+      - name: Run the e2e tests
+        run: |
+          kubectl -n harbor port-forward svc/harbor 18080:80 > /tmp/port-forward.log 2>&1 &
+          for _ in $(seq 60); do
+            curl -sf http://127.0.0.1:18080/api/v2.0/ping >/dev/null && break
+            sleep 2
+          done
+          export HARBOR_URL=http://127.0.0.1:18080 HARBOR_USERNAME=admin
+          HARBOR_PASSWORD=$(sed -n 's/^harborAdminPassword: //p' test/e2e/testdata/harbor-values.yaml)
+          export HARBOR_PASSWORD
+          make test-e2e
+
+      - name: Harbor state on failure
+        if: failure()
+        run: |
+          kubectl -n harbor get pods -o wide
+          kubectl -n harbor logs deploy/harbor-core --tail=100 || true
+          cat /tmp/port-forward.log || true

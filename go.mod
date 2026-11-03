@@ -2,6 +2,8 @@ module github.com/oreondev/harbor-mcp
 
 go 1.26.0
 
+toolchain go1.26.10
+
 require (
 	github.com/modelcontextprotocol/go-sdk v1.8.0
 	github.com/oreondev/harbor-resource-operator v0.1.2-0.20261103214122-502ba2ec735a
