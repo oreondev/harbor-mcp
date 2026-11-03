@@ -4,7 +4,7 @@ go 1.26.0
 
 require (
 	github.com/modelcontextprotocol/go-sdk v1.8.0
-	github.com/oreondev/harbor-resource-operator v0.1.2-0.20261103210432-81c94c6bcb0e
+	github.com/oreondev/harbor-resource-operator v0.1.2-0.20261103214122-502ba2ec735a
 	golang.org/x/time v0.15.0
 )
 
