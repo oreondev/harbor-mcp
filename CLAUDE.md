@@ -14,6 +14,10 @@ An MCP server for Harbor's REST API v2.0. It reads Harbor objects by default; wr
 - Tests: every tool through the SDK's in-memory transport against the fake Harbor.
 - Go 1.26; `golangci-lint` at 0 issues; the `sort` package is forbidden, use `slices`.
 
+## CI
+
+`.github/workflows`: unit tests with a tidy check and govulncheck (`test.yml`), golangci-lint (`lint.yml`), and e2e on kind with the official Harbor chart (`test-e2e.yml`: Harbor 2.15 on pushes and pull requests, 2.12 to 2.15 nightly on develop). Actions are pinned by SHA, with the same versions as harbor-resource-operator. `go.mod` pins the toolchain (`toolchain go1.26.10`) so govulncheck sees a patched standard library.
+
 ## Branches and releases
 
 Work branches (`feat/`, `fix/`, `chore/`, `docs/`) are cut from `develop` and squash-merged into it; `develop` merges into `main` for a release, and a `vX.Y.Z` tag on `main` publishes it.

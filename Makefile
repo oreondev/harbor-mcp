@@ -23,6 +23,10 @@ test-e2e: ## Run the binary against the Harbor in HARBOR_URL, HARBOR_USERNAME, H
 lint: $(GOLANGCI_LINT) ## Run golangci-lint.
 	"$(GOLANGCI_LINT)" run
 
+.PHONY: lint-config
+lint-config: $(GOLANGCI_LINT) ## Verify the golangci-lint configuration.
+	"$(GOLANGCI_LINT)" config verify
+
 $(GOLANGCI_LINT):
 	mkdir -p $(LOCALBIN)
 	GOBIN=$(LOCALBIN) go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@$(GOLANGCI_LINT_VERSION)
