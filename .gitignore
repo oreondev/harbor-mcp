@@ -1,0 +1,19 @@
+# Build output
+bin/
+dist/
+*.test
+*.out
+
+# Go workspace file
+go.work
+
+# Editors
+.idea
+.vscode
+*.swp
+*~
+
+# Local notes and credentials
+CLAUDE.local.md
+.env
+*.kubeconfig
