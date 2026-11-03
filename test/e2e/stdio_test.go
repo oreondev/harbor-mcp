@@ -123,6 +123,13 @@ func TestEveryReadToolAgainstRealHarbor(t *testing.T) {
 			_ = hc.DeleteProject(ctx, p.ProjectID)
 		}
 	})
+	robot, err := hc.CreateRobot(ctx, harbor.RobotCreate{Name: "e2e-pull", Level: "project", Duration: 1,
+		Permissions: []harbor.RobotPermission{{Kind: "project", Namespace: project,
+			Access: []harbor.Access{{Resource: "repository", Action: "pull"}}}}})
+	if err != nil {
+		t.Fatalf("create robot: %v", err)
+	}
+	t.Cleanup(func() { _ = hc.DeleteRobot(ctx, robot.ID) })
 	for _, tag := range []string{"1.0", "1.1"} {
 		if err := pushTestImage(user, pass, project+"/team/app", tag); err != nil {
 			t.Fatalf("push %s: %v", tag, err)
@@ -159,12 +166,22 @@ func TestEveryReadToolAgainstRealHarbor(t *testing.T) {
 	if ms["total"].(float64) < 1 {
 		t.Fatalf("members: %v", ms)
 	}
-	for _, name := range []string{"harbor_list_robots", "harbor_list_registries", "harbor_list_replications", "harbor_get_gc"} {
+	// Harbor lists project robots only per project; both forms must find it.
+	for _, args := range []map[string]any{{"project": project}, {"query": "e2e-pull"}} {
+		rb := call(t, cs, "harbor_list_robots", args)
+		if rb["total"].(float64) != 1 || items(rb)[0]["name"] != robot.Name || items(rb)[0]["expires"] == "" {
+			t.Fatalf("robots %v: %v", args, rb)
+		}
+		if out, _ := json.Marshal(rb); strings.Contains(string(out), robot.Secret) {
+			t.Fatal("the robot secret appears in harbor_list_robots")
+		}
+	}
+	for _, name := range []string{"harbor_list_registries", "harbor_list_replications", "harbor_get_gc"} {
 		call(t, cs, name, nil)
 	}
 	call(t, cs, "harbor_list_webhooks", map[string]any{"project": project})
 
-	if strings.Contains(stderr.String(), pass) {
-		t.Fatal("the password appears in the server's log")
+	if strings.Contains(stderr.String(), pass) || strings.Contains(stderr.String(), robot.Secret) {
+		t.Fatal("a secret appears in the server's log")
 	}
 }
