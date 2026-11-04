@@ -1,0 +1,79 @@
+site_name: Harbor MCP server
+site_description: A read-only MCP server that lets AI assistants answer questions about a Harbor container registry.
+site_url: https://www.oreonit.com/harbor-mcp/
+site_author: Oreon IT
+repo_url: https://github.com/oreondev/harbor-mcp
+repo_name: oreondev/harbor-mcp
+edit_uri: edit/develop/docs/
+copyright: >-
+  Copyright 2026 Fahri Cap. Maintained by <a href="https://www.oreonit.com">Oreon IT</a>.
+  Apache-2.0. Harbor is a trademark of The Linux Foundation; this project is not affiliated with the Harbor project or the CNCF.
+
+docs_dir: docs
+exclude_docs: |
+  requirements.txt
+
+hooks:
+  - hack/docs/hooks.py
+
+theme:
+  name: material
+  logo: images/icon.svg
+  favicon: images/icon.svg
+  font: false
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      toggle: { icon: material/brightness-7, name: Dark mode }
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      toggle: { icon: material/brightness-4, name: Light mode }
+  features:
+    - content.code.copy
+    - content.tabs.link
+    - navigation.footer
+    - navigation.sections
+    - navigation.top
+    - search.suggest
+
+plugins:
+  - search
+  - mike:
+      alias_type: copy
+      canonical_version: latest
+      version_selector: true
+
+extra:
+  version:
+    provider: mike
+    default: latest
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/oreondev/harbor-mcp
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+
+nav:
+  - Home: index.md
+  - Install: install.md
+  - Connect a client: clients.md
+  - Read-only identity: read-only-robot.md
+  - HTTP mode: http.md
+  - Tools: tools.md
+  - Project:
+      - Design: DESIGN.md
+      - Releases: https://github.com/oreondev/harbor-mcp/releases
+      - Security: https://github.com/oreondev/harbor-mcp/blob/main/SECURITY.md
+      - Harbor Resource Operator: https://www.oreonit.com/harbor-operator/

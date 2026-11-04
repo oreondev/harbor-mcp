@@ -123,6 +123,26 @@ func TestReadToolsAreAnnotatedAndDescribed(t *testing.T) {
 	}
 }
 
+func TestCatalogMatchesAConnectedClient(t *testing.T) {
+	srv := newHarbor(t)
+	res, err := connect(t, srv.URL(), adminUser, adminPass).ListTools(context.Background(), nil)
+	if err != nil {
+		t.Fatalf("list tools: %v", err)
+	}
+	catalog, err := server.Catalog(context.Background(), "test")
+	if err != nil {
+		t.Fatalf("catalog: %v", err)
+	}
+	if len(catalog) != len(res.Tools) {
+		t.Fatalf("catalog has %d tools, a client sees %d", len(catalog), len(res.Tools))
+	}
+	for i, tool := range catalog {
+		if tool.Name != res.Tools[i].Name || tool.Description != res.Tools[i].Description {
+			t.Errorf("tool %d: catalog %q, client %q", i, tool.Name, res.Tools[i].Name)
+		}
+	}
+}
+
 func TestSystemInfo(t *testing.T) {
 	srv := newHarbor(t)
 	cs := connect(t, srv.URL(), adminUser, adminPass)

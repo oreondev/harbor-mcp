@@ -21,6 +21,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"flag"
 	"fmt"
@@ -29,6 +30,8 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"runtime/debug"
+	"strings"
 	"syscall"
 	"time"
 
@@ -44,11 +47,24 @@ import (
 var version = "dev"
 
 func main() {
+	// Release builds set version with -ldflags; go install builds carry the
+	// module version instead.
+	if info, ok := debug.ReadBuildInfo(); ok && version == "dev" && info.Main.Version != "" && info.Main.Version != "(devel)" {
+		version = strings.TrimPrefix(info.Main.Version, "v")
+	}
 	showVersion := flag.Bool("version", false, "print the version and exit")
 	httpAddr := flag.String("http", "", "serve streamable HTTP on this address (for example :8080) instead of stdio")
+	listTools := flag.Bool("list-tools", false, "print the tool definitions as JSON and exit (needs no Harbor)")
 	flag.Parse()
 	if *showVersion {
 		fmt.Println(version)
+		return
+	}
+	if *listTools {
+		if err := printTools(); err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
 		return
 	}
 	// stdout carries the protocol; everything else goes to stderr.
@@ -57,6 +73,16 @@ func main() {
 		log.Error("harbor-mcp stopped", "error", err)
 		os.Exit(1)
 	}
+}
+
+func printTools() error {
+	tools, err := server.Catalog(context.Background(), version)
+	if err != nil {
+		return err
+	}
+	enc := json.NewEncoder(os.Stdout)
+	enc.SetIndent("", "  ")
+	return enc.Encode(tools)
 }
 
 func run(log *slog.Logger, httpAddr string) error {
