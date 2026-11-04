@@ -98,6 +98,10 @@ cosign verify ghcr.io/oreondev/harbor-mcp:0.1.0 \
   --certificate-oidc-issuer https://token.actions.githubusercontent.com
 ```
 
+## Maintainers
+
+Maintained by [Oreon IT](https://www.oreonit.com). Issues and pull requests are welcome.
+
 ## Security
 
 Report vulnerabilities privately; see [SECURITY.md](SECURITY.md).
