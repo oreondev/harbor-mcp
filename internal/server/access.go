@@ -29,7 +29,8 @@ func (t *tools) registerAccess(s *mcp.Server) {
 	mcp.AddTool(s, &mcp.Tool{
 		Name: "harbor_list_robots",
 		Description: "List robot accounts with their permissions and expiry, optionally only those with access to project " +
-			"or whose name contains query. Secrets are never shown.",
+			"or whose name contains query. Harbor lists project robots per project, so without project this makes one " +
+			"Harbor request per project. Secrets are never shown.",
 		Annotations: readOnly("List robot accounts"),
 	}, t.listRobots)
 	mcp.AddTool(s, &mcp.Tool{
@@ -78,7 +79,7 @@ func robotSummary(r harbor.Robot, now time.Time) RobotSummary {
 }
 
 func (t *tools) listRobots(ctx context.Context, _ *mcp.CallToolRequest, in ListRobotsArgs) (*mcp.CallToolResult, Page[RobotSummary], error) {
-	all, err := t.hc.ListRobots(ctx, "")
+	all, err := t.robots(ctx, in.Project)
 	if err != nil {
 		return nil, Page[RobotSummary]{}, t.fail("list robot accounts", err)
 	}
@@ -94,6 +95,49 @@ func (t *tools) listRobots(ctx context.Context, _ *mcp.CallToolRequest, in ListR
 		out = append(out, robotSummary(r, now))
 	}
 	return nil, localPage(out, in.PageArgs), nil
+}
+
+// robots returns the system robots and the project robots of project, or of
+// every project when project is empty: Harbor's /robots leaves project robots
+// out unless it is asked for one project.
+func (t *tools) robots(ctx context.Context, project string) ([]harbor.Robot, error) {
+	all, err := t.hc.ListRobots(ctx, "")
+	if err != nil {
+		return nil, err
+	}
+	var projects []harbor.Project
+	if project != "" {
+		p, err := t.hc.GetProjectByName(ctx, project)
+		if err != nil {
+			return nil, err
+		}
+		projects = []harbor.Project{*p}
+	} else if projects, err = t.allProjects(ctx); err != nil {
+		return nil, err
+	}
+	for _, p := range projects {
+		rs, err := t.hc.ListProjectRobots(ctx, p.ProjectID, "")
+		if err != nil {
+			return nil, err
+		}
+		all = append(all, rs...)
+	}
+	return all, nil
+}
+
+// allProjects returns every project the server's identity can see.
+func (t *tools) allProjects(ctx context.Context) ([]harbor.Project, error) {
+	var all []harbor.Project
+	for page := 1; ; page++ {
+		ps, total, err := t.hc.ListProjects(ctx, "", harbor.PageOptions{Page: page, PageSize: 100})
+		if err != nil {
+			return nil, err
+		}
+		all = append(all, ps...)
+		if len(ps) == 0 || int64(len(all)) >= total {
+			return all, nil
+		}
+	}
 }
 
 // robotIn reports whether r has permissions in project (system robots with

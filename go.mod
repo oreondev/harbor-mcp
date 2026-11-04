@@ -6,7 +6,7 @@ toolchain go1.26.10
 
 require (
 	github.com/modelcontextprotocol/go-sdk v1.8.0
-	github.com/oreondev/harbor-resource-operator v0.1.2-0.20261103214122-502ba2ec735a
+	github.com/oreondev/harbor-resource-operator v0.1.2-0.20261104001152-c291577333ee
 	golang.org/x/time v0.15.0
 )
 
