@@ -11,8 +11,14 @@ An MCP server for Harbor's REST API v2.0. It reads Harbor objects by default; wr
 - The Harbor client and the fake Harbor come from `github.com/oreondev/harbor-resource-operator/pkg/harbor` and `pkg/harbor/fake`, pinned to an operator release. New Harbor endpoints are added there first (client, fake and tests), then the pin is bumped here. Do not copy the client.
 - Credentials, the HTTP token, robot secrets and webhook `auth_header` values are never logged and never returned in tool results or errors; a test enforces it.
 - Every tool: JSON input and output schemas, MCP annotations (`readOnlyHint`, `destructiveHint`, `idempotentHint`), paging for lists (default 25, maximum 100).
-- Tests: every tool through the SDK's in-memory transport against the fake Harbor.
+- Tests: every tool through the SDK's in-memory transport against the fake Harbor; HTTP mode (token, health, cross-origin) through `httptest`.
 - Go 1.26; `golangci-lint` at 0 issues; the `sort` package is forbidden, use `slices`.
+
+## CI
+
+`.github/workflows`: unit tests with a tidy check and govulncheck (`test.yml`), golangci-lint (`lint.yml`), and e2e on kind with the official Harbor chart (`test-e2e.yml`: Harbor 2.15 on pushes and pull requests, 2.12 to 2.15 nightly on develop). Actions are pinned by SHA, with the same versions as harbor-resource-operator. `go.mod` pins the toolchain (`toolchain go1.26.10`) so govulncheck sees a patched standard library.
+
+`release.yml` runs the tests and lint, then builds, pushes and signs the image: `ghcr.io/oreondev/harbor-mcp:develop` on every push to `develop`, `X.Y.Z` on a tag. A tag also uploads the binaries from `make dist` with signed checksums and publishes `server.json` to the MCP Registry with `mcp-publisher` and GitHub OIDC. `server.json` must carry the tag's version in `version` and in the image reference, and the Dockerfile label `io.modelcontextprotocol.server.name` must match its `name`; `make validate-server-json` checks the file. `docs/read-only-robot.json` is the documented robot, and the e2e suite runs the server as it, so keep it in step with what the tools read.
 
 ## Branches and releases
 
