@@ -37,9 +37,9 @@ import (
 
 const project = "harbor-mcp-e2e"
 
-// start builds the binary, runs it over stdio and returns a session and the
-// server's stderr.
-func start(t *testing.T) (*mcp.ClientSession, *strings.Builder) {
+// binary builds the server and returns its path; it skips the test when no
+// Harbor is configured.
+func binary(t *testing.T) string {
 	t.Helper()
 	if harborURL() == "" {
 		t.Skip("HARBOR_URL not set")
@@ -49,7 +49,14 @@ func start(t *testing.T) (*mcp.ClientSession, *strings.Builder) {
 	if out, err := build.CombinedOutput(); err != nil {
 		t.Fatalf("build: %v\n%s", err, out)
 	}
-	cmd := exec.Command(bin)
+	return bin
+}
+
+// start builds the binary, runs it over stdio and returns a session and the
+// server's stderr.
+func start(t *testing.T) (*mcp.ClientSession, *strings.Builder) {
+	t.Helper()
+	cmd := exec.Command(binary(t))
 	stderr := &strings.Builder{}
 	cmd.Stderr = stderr
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
