@@ -1,6 +1,6 @@
 # Harbor MCP server: design
 
-Status: the read tools (section 4), both transports and the release workflow are implemented and tested; nothing is released yet. Version 0.4, 2026-11-04.
+Status: version 0.1.0 is released with the read tools (section 4), both transports and the release workflow. Version 0.5, 2026-11-04.
 
 ## 1. Purpose
 
