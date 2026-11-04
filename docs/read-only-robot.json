@@ -1,0 +1,161 @@
+{
+  "name": "harbor-mcp",
+  "description": "Read-only identity for harbor-mcp",
+  "level": "system",
+  "duration": -1,
+  "disable": false,
+  "permissions": [
+    {
+      "kind": "system",
+      "namespace": "/",
+      "access": [
+        {
+          "resource": "project",
+          "action": "list"
+        },
+        {
+          "resource": "quota",
+          "action": "list"
+        },
+        {
+          "resource": "quota",
+          "action": "read"
+        },
+        {
+          "resource": "robot",
+          "action": "list"
+        },
+        {
+          "resource": "robot",
+          "action": "read"
+        },
+        {
+          "resource": "registry",
+          "action": "list"
+        },
+        {
+          "resource": "registry",
+          "action": "read"
+        },
+        {
+          "resource": "replication-policy",
+          "action": "list"
+        },
+        {
+          "resource": "replication-policy",
+          "action": "read"
+        },
+        {
+          "resource": "replication",
+          "action": "list"
+        },
+        {
+          "resource": "replication",
+          "action": "read"
+        },
+        {
+          "resource": "garbage-collection",
+          "action": "list"
+        },
+        {
+          "resource": "garbage-collection",
+          "action": "read"
+        }
+      ]
+    },
+    {
+      "kind": "project",
+      "namespace": "*",
+      "access": [
+        {
+          "resource": "project",
+          "action": "read"
+        },
+        {
+          "resource": "metadata",
+          "action": "list"
+        },
+        {
+          "resource": "metadata",
+          "action": "read"
+        },
+        {
+          "resource": "quota",
+          "action": "read"
+        },
+        {
+          "resource": "repository",
+          "action": "list"
+        },
+        {
+          "resource": "repository",
+          "action": "read"
+        },
+        {
+          "resource": "artifact",
+          "action": "list"
+        },
+        {
+          "resource": "artifact",
+          "action": "read"
+        },
+        {
+          "resource": "tag",
+          "action": "list"
+        },
+        {
+          "resource": "label",
+          "action": "list"
+        },
+        {
+          "resource": "label",
+          "action": "read"
+        },
+        {
+          "resource": "artifact-addition",
+          "action": "read"
+        },
+        {
+          "resource": "scan",
+          "action": "read"
+        },
+        {
+          "resource": "member",
+          "action": "list"
+        },
+        {
+          "resource": "member",
+          "action": "read"
+        },
+        {
+          "resource": "robot",
+          "action": "list"
+        },
+        {
+          "resource": "robot",
+          "action": "read"
+        },
+        {
+          "resource": "immutable-tag",
+          "action": "list"
+        },
+        {
+          "resource": "tag-retention",
+          "action": "list"
+        },
+        {
+          "resource": "tag-retention",
+          "action": "read"
+        },
+        {
+          "resource": "notification-policy",
+          "action": "list"
+        },
+        {
+          "resource": "notification-policy",
+          "action": "read"
+        }
+      ]
+    }
+  ]
+}

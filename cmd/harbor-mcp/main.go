@@ -79,7 +79,7 @@ func run(log *slog.Logger, httpAddr string) error {
 		return err
 	}
 	s := server.New(hc, server.Options{
-		Version: version, AllowWrite: cfg.AllowWrite, Secrets: []string{cfg.Password, cfg.HTTPToken},
+		Version: version, Username: cfg.Username, AllowWrite: cfg.AllowWrite, Secrets: []string{cfg.Password, cfg.HTTPToken},
 	})
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()

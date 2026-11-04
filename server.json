@@ -1,0 +1,54 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.oreondev/harbor-mcp",
+  "title": "Harbor",
+  "description": "Read-only access to a Harbor registry: projects, artifacts, vulnerabilities, robots and replication.",
+  "version": "0.1.0",
+  "repository": {
+    "url": "https://github.com/oreondev/harbor-mcp",
+    "source": "github"
+  },
+  "websiteUrl": "https://github.com/oreondev/harbor-mcp",
+  "packages": [
+    {
+      "registryType": "oci",
+      "identifier": "ghcr.io/oreondev/harbor-mcp:0.1.0",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "HARBOR_URL",
+          "description": "Harbor base URL, for example https://harbor.example.com",
+          "isRequired": true,
+          "format": "string"
+        },
+        {
+          "name": "HARBOR_USERNAME",
+          "description": "Harbor user or robot account; a read-only system robot is recommended",
+          "isRequired": true,
+          "format": "string"
+        },
+        {
+          "name": "HARBOR_PASSWORD",
+          "description": "Password or robot secret",
+          "isRequired": true,
+          "isSecret": true,
+          "format": "string"
+        },
+        {
+          "name": "HARBOR_INSECURE_SKIP_VERIFY",
+          "description": "Set to true to skip TLS verification of Harbor",
+          "format": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "HARBOR_MCP_RATE",
+          "description": "Requests per second to Harbor",
+          "format": "number",
+          "default": "10"
+        }
+      ]
+    }
+  ]
+}

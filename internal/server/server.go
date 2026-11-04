@@ -31,6 +31,9 @@ import (
 type Options struct {
 	// Version is reported to clients.
 	Version string
+	// Username is the Harbor identity the server was configured with. It is
+	// reported for robot accounts, which Harbor cannot describe.
+	Username string
 	// AllowWrite registers the write tools.
 	AllowWrite bool
 	// Secrets are removed from every error text before it reaches a client:
@@ -51,15 +54,16 @@ func New(hc *harbor.Client, o Options) *mcp.Server {
 		Version:    o.Version,
 		WebsiteURL: "https://github.com/oreondev/harbor-mcp",
 	}, &mcp.ServerOptions{Instructions: instructions})
-	t := &tools{hc: hc, secrets: nonEmpty(o.Secrets)}
+	t := &tools{hc: hc, username: o.Username, secrets: nonEmpty(o.Secrets)}
 	t.register(s)
 	return s
 }
 
 // tools holds what every tool handler needs.
 type tools struct {
-	hc      *harbor.Client
-	secrets []string
+	hc       *harbor.Client
+	username string
+	secrets  []string
 }
 
 // readOnly annotates a tool that only reads from Harbor.
