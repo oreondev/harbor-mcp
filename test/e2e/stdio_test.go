@@ -53,10 +53,11 @@ func binary(t *testing.T) string {
 }
 
 // start builds the binary, runs it over stdio and returns a session and the
-// server's stderr.
-func start(t *testing.T) (*mcp.ClientSession, *strings.Builder) {
+// server's stderr. env is added to the test's environment.
+func start(t *testing.T, env ...string) (*mcp.ClientSession, *strings.Builder) {
 	t.Helper()
 	cmd := exec.Command(binary(t))
+	cmd.Env = append(os.Environ(), env...)
 	stderr := &strings.Builder{}
 	cmd.Stderr = stderr
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
@@ -174,9 +175,14 @@ func TestEveryReadToolAgainstRealHarbor(t *testing.T) {
 		t.Fatalf("members: %v", ms)
 	}
 	// Harbor lists project robots only per project; both forms must find it.
+	// System robots covering every project may be listed too.
 	for _, args := range []map[string]any{{"project": project}, {"query": "e2e-pull"}} {
 		rb := call(t, cs, "harbor_list_robots", args)
-		if rb["total"].(float64) != 1 || items(rb)[0]["name"] != robot.Name || items(rb)[0]["expires"] == "" {
+		found := false
+		for _, r := range items(rb) {
+			found = found || r["name"] == robot.Name && r["expires"] != ""
+		}
+		if !found {
 			t.Fatalf("robots %v: %v", args, rb)
 		}
 		if out, _ := json.Marshal(rb); strings.Contains(string(out), robot.Secret) {
@@ -190,5 +196,55 @@ func TestEveryReadToolAgainstRealHarbor(t *testing.T) {
 
 	if strings.Contains(stderr.String(), pass) || strings.Contains(stderr.String(), robot.Secret) {
 		t.Fatal("a secret appears in the server's log")
+	}
+
+	readOnlyRobot(t, hc)
+}
+
+// readOnlyRobot creates the system robot of docs/read-only-robot.json and
+// calls every tool as it, so the documented permissions are tested on every
+// Harbor version.
+func readOnlyRobot(t *testing.T, hc *harbor.Client) {
+	t.Helper()
+	ctx := context.Background()
+	data, err := os.ReadFile("../../docs/read-only-robot.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	var req harbor.RobotCreate
+	if err := json.Unmarshal(data, &req); err != nil {
+		t.Fatalf("docs/read-only-robot.json: %v", err)
+	}
+	req.Name, req.Duration = "harbor-mcp-e2e-reader", 1
+	robot, err := hc.CreateRobot(ctx, req)
+	if err != nil {
+		t.Fatalf("create the read-only robot: %v", err)
+	}
+	t.Cleanup(func() { _ = hc.DeleteRobot(ctx, robot.ID) })
+
+	cs, stderr := start(t, "HARBOR_USERNAME="+robot.Name, "HARBOR_PASSWORD="+robot.Secret)
+	if info := call(t, cs, "harbor_system_info", nil); info["user"] != robot.Name || info["robot"] != true {
+		t.Fatalf("system info as the robot: %v", info)
+	}
+	for name, args := range map[string]map[string]any{
+		"harbor_list_projects":       nil,
+		"harbor_get_project":         {"project": project},
+		"harbor_list_repositories":   {"project": project},
+		"harbor_list_artifacts":      {"project": project, "repository": "team/app"},
+		"harbor_get_vulnerabilities": {"project": project, "repository": "team/app", "reference": "1.1"},
+		"harbor_list_members":        {"project": project},
+		"harbor_list_robots":         {"project": project},
+		"harbor_list_registries":     nil,
+		"harbor_list_replications":   nil,
+		"harbor_list_webhooks":       {"project": project},
+		"harbor_get_gc":              nil,
+	} {
+		out, _ := json.Marshal(call(t, cs, name, args))
+		if strings.Contains(string(out), robot.Secret) {
+			t.Fatalf("%s: the robot secret appears in the result", name)
+		}
+	}
+	if strings.Contains(stderr.String(), robot.Secret) {
+		t.Fatal("the robot secret appears in the server's log")
 	}
 }

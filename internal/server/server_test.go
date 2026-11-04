@@ -19,6 +19,11 @@ package server_test
 import (
 	"context"
 	"encoding/json"
+	"io"
+	"net/http"
+	"net/http/httptest"
+	"net/http/httputil"
+	"net/url"
 	"strings"
 	"testing"
 
@@ -37,14 +42,14 @@ const (
 
 // connect starts the server against Harbor at url as user/pass and returns a
 // client session over the SDK's in-memory transport.
-func connect(t *testing.T, url, user, pass string) *mcp.ClientSession {
+func connect(t *testing.T, baseURL, user, pass string) *mcp.ClientSession {
 	t.Helper()
 	ctx := context.Background()
-	hc, err := harbor.New(harbor.Options{URL: url, Username: user, Password: pass})
+	hc, err := harbor.New(harbor.Options{URL: baseURL, Username: user, Password: pass})
 	if err != nil {
 		t.Fatalf("harbor client: %v", err)
 	}
-	s := server.New(hc, server.Options{Version: "test", Secrets: []string{pass, httpToken}})
+	s := server.New(hc, server.Options{Version: "test", Username: user, Secrets: []string{pass, httpToken}})
 	st, ct := mcp.NewInMemoryTransports()
 	ss, err := s.Connect(ctx, st, nil)
 	if err != nil {
@@ -128,6 +133,34 @@ func TestSystemInfo(t *testing.T) {
 	}
 	if got.HarborVersion != srv.Version || got.User != adminUser || !got.Admin || got.AuthMode != "db_auth" {
 		t.Fatalf("system info: %+v", got)
+	}
+}
+
+// Harbor answers GET /users/current for a robot account with 412; the tool
+// then reports the configured robot name.
+func TestSystemInfoAsRobot(t *testing.T) {
+	srv := newHarbor(t)
+	target, _ := url.Parse(srv.URL())
+	proxy := httputil.NewSingleHostReverseProxy(target)
+	robot := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path == "/api/v2.0/users/current" {
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusPreconditionFailed)
+			_, _ = io.WriteString(w, `{"errors":[{"code":"PRECONDITION","message":"get current user not available for security context: robot"}]}`)
+			return
+		}
+		r.SetBasicAuth(adminUser, adminPass)
+		proxy.ServeHTTP(w, r)
+	}))
+	t.Cleanup(robot.Close)
+
+	cs := connect(t, robot.URL, "robot$harbor-mcp", "s3cret-robot-pass")
+	var got server.SystemInfo
+	if res := call(t, cs, "harbor_system_info", nil, &got); res.IsError {
+		t.Fatalf("tool error: %s", text(res))
+	}
+	if got.User != "robot$harbor-mcp" || !got.Robot || got.Admin || got.HarborVersion != srv.Version {
+		t.Fatalf("system info as a robot: %+v", got)
 	}
 }
 
