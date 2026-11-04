@@ -6,12 +6,12 @@ This is an independent community project. It is not affiliated with or endorsed 
 
 ## Status
 
-In development; the first release (0.1.0) is being prepared. The twelve read tools work over stdio and streamable HTTP, and are tested against a fake Harbor, Harbor 2.15 on every pull request and Harbor 2.12 to 2.15 nightly, as an administrator and as the read-only robot below. The design is in [docs/DESIGN.md](docs/DESIGN.md).
+Version 0.1.0 is the first release. The twelve read tools work over stdio and streamable HTTP, and are tested against a fake Harbor, Harbor 2.15 on every pull request and Harbor 2.12 to 2.15 nightly, as an administrator and as the read-only robot below. The design is in [docs/DESIGN.md](docs/DESIGN.md).
 
 - Read-only: twelve tools covering projects, repositories, artifacts, vulnerabilities, robots, members, registries, replication, webhooks and garbage collection. Write tools (scan, start replication, add a label, create a project) will come later, only with an explicit opt-in. No tool deletes anything.
 - Secrets stay out of the conversation: Harbor credentials, robot secrets and webhook authorization headers never appear in tool results, logs or errors.
 - stdio for desktop clients, and streamable HTTP with a bearer token for running in a cluster.
-- A signed multi-arch image, `ghcr.io/oreondev/harbor-mcp`, published to the official MCP Registry as `io.github.oreondev/harbor-mcp` from the first release.
+- A signed multi-arch image, `ghcr.io/oreondev/harbor-mcp`, listed in the official MCP Registry as `io.github.oreondev/harbor-mcp`.
 - Uses the Harbor client of [harbor-resource-operator](https://github.com/oreondev/harbor-resource-operator), the Kubernetes operator that manages Harbor projects, robot accounts and replication as code.
 
 ## Tools
