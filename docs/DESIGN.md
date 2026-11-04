@@ -17,7 +17,7 @@ On 2026-11-03 no maintained Harbor MCP server existed: `bupd/harbor-mcp-server` 
 | Binary | `cmd/harbor-mcp` in this repository, module `github.com/oreondev/harbor-mcp`, released from its own `vX.Y.Z` tags |
 | Image | `ghcr.io/oreondev/harbor-mcp:X.Y.Z`, multi-arch (amd64, arm64), distroless, non-root, signed with cosign, SBOM and provenance |
 | SDK | `github.com/modelcontextprotocol/go-sdk` (official Go SDK, v1.8.0 on 2026-11-03) |
-| Transports | stdio (default; for desktop clients and Docker's toolkit) and streamable HTTP with `--http <addr>` (for ToolHive, kmcp or a Deployment) |
+| Transports | stdio (default; for desktop clients and Docker's toolkit) and streamable HTTP with `-http <addr>` (for ToolHive, kmcp or a Deployment): MCP at `/mcp`, an unauthenticated `GET /healthz` for probes, stateless sessions so replicas need no affinity, cross-origin browser requests refused. TLS is left to the ingress or mesh in front |
 | Registry name | `io.github.oreondev/harbor-mcp` (namespace proved by GitHub Actions OIDC in the release workflow) |
 | Licence | Apache-2.0, same as the repository |
 
@@ -33,7 +33,7 @@ Environment variables, each with a `_FILE` variant for mounted Secrets:
 | `HARBOR_INSECURE_SKIP_VERIFY` | `true` to skip TLS verification; logged as a warning at start |
 | `HARBOR_MCP_RATE` | Requests per second to Harbor, default 10, shared by all tools (the operator's limiter) |
 | `HARBOR_MCP_ALLOW_WRITE` | `true` registers the write tools (section 5); off by default |
-| `HARBOR_MCP_HTTP_TOKEN` | Bearer token required on every HTTP request in `--http` mode; the server refuses to start in HTTP mode without one unless `--http` binds to a loopback address |
+| `HARBOR_MCP_HTTP_TOKEN` | Bearer token required on every HTTP request in `-http` mode; the server refuses to start in HTTP mode without one unless `-http` binds to a loopback address |
 
 Credentials and the HTTP token are never logged, never returned in tool output and never included in error messages. Robot secrets and webhook `auth_header` values are removed from every result.
 
