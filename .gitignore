@@ -17,3 +17,7 @@ go.work
 CLAUDE.local.md
 .env
 *.kubeconfig
+
+# Docs site (generated)
+/site/
+/docs/tools.md

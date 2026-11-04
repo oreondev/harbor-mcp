@@ -8,7 +8,7 @@
     "url": "https://github.com/oreondev/harbor-mcp",
     "source": "github"
   },
-  "websiteUrl": "https://github.com/oreondev/harbor-mcp",
+  "websiteUrl": "https://www.oreonit.com/harbor-mcp/",
   "packages": [
     {
       "registryType": "oci",
