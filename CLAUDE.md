@@ -22,4 +22,4 @@ An MCP server for Harbor's REST API v2.0. It reads Harbor objects by default; wr
 
 ## Branches and releases
 
-Work branches (`feat/`, `fix/`, `chore/`, `docs/`) are cut from `develop` and squash-merged into it; `develop` merges into `main` for a release, and a `vX.Y.Z` tag on `main` publishes it.
+Work branches (`feat/`, `fix/`, `chore/`, `docs/`) are cut from `develop` and squash-merged into it; `develop` merges into `main` for a release, and a `vX.Y.Z` tag on `main` publishes it. User-visible changes get a line under `Unreleased` in `CHANGELOG.md`; the release bump renames it to `X.Y.Z - YYYY-MM-DD`, and `release.yml` fails without that section and uses it as the GitHub release notes. `docs/changelog.md` is copied from it at docs build time.

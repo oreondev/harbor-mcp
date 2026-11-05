@@ -1,4 +1,4 @@
-# Copyright 2026 Fahri Cap.
+# Copyright 2026 Oreon IT.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""MkDocs hooks: generate the tool reference and fill in the release version.
+"""MkDocs hooks: generate the tool reference and release notes, and fill in the release version.
 
 docs/tools.md is written from `harbor-mcp -list-tools`, so it always matches
 the code; it is generated at build time and not committed.
@@ -20,6 +20,7 @@ the code; it is generated at build time and not committed.
 
 import json
 import os
+import shutil
 import subprocess
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
@@ -83,6 +84,7 @@ def on_pre_build(config, **kwargs):
                          capture_output=True, text=True).stdout
     with open(os.path.join(ROOT, "docs", "tools.md"), "w") as f:
         f.write(tools_page(json.loads(raw)))
+    shutil.copyfile(os.path.join(ROOT, "CHANGELOG.md"), os.path.join(ROOT, "docs", "changelog.md"))
 
 
 def on_page_markdown(markdown, page, config, files, **kwargs):
