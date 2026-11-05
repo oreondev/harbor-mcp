@@ -52,6 +52,11 @@ Configuration comes from environment variables; each except `HARBOR_CA_FILE` can
 | `HARBOR_MCP_RATE` | requests per second to Harbor, default 10 |
 | `HARBOR_MCP_HTTP_TOKEN` | bearer token for HTTP mode |
 
+One-click install (the client asks for the URL and credentials, or you fill them in afterwards):
+
+[![Install in VS Code](https://img.shields.io/badge/VS_Code-Install_harbor--mcp-0098FF?logo=visualstudiocode&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=harbor&inputs=%5B%7B%22type%22%3A%22promptString%22%2C%22id%22%3A%22harbor-url%22%2C%22description%22%3A%22Harbor%20URL%2C%20for%20example%20https%3A%2F%2Fharbor.example.com%22%7D%2C%7B%22type%22%3A%22promptString%22%2C%22id%22%3A%22harbor-username%22%2C%22description%22%3A%22Harbor%20user%20or%20robot%20name%22%7D%2C%7B%22type%22%3A%22promptString%22%2C%22id%22%3A%22harbor-password%22%2C%22description%22%3A%22Password%20or%20robot%20secret%22%2C%22password%22%3Atrue%7D%5D&config=%7B%22command%22%3A%22docker%22%2C%22args%22%3A%5B%22run%22%2C%22-i%22%2C%22--rm%22%2C%22-e%22%2C%22HARBOR_URL%22%2C%22-e%22%2C%22HARBOR_USERNAME%22%2C%22-e%22%2C%22HARBOR_PASSWORD%22%2C%22ghcr.io%2Foreondev%2Fharbor-mcp%3Alatest%22%5D%2C%22env%22%3A%7B%22HARBOR_URL%22%3A%22%24%7Binput%3Aharbor-url%7D%22%2C%22HARBOR_USERNAME%22%3A%22%24%7Binput%3Aharbor-username%7D%22%2C%22HARBOR_PASSWORD%22%3A%22%24%7Binput%3Aharbor-password%7D%22%7D%7D)
+[![Add to Cursor](https://img.shields.io/badge/Cursor-Add_harbor--mcp-000000?logo=cursor&logoColor=white)](https://cursor.com/en/install-mcp?name=harbor&config=eyJjb21tYW5kIjoiZG9ja2VyIiwiYXJncyI6WyJydW4iLCItaSIsIi0tcm0iLCItZSIsIkhBUkJPUl9VUkwiLCItZSIsIkhBUkJPUl9VU0VSTkFNRSIsIi1lIiwiSEFSQk9SX1BBU1NXT1JEIiwiZ2hjci5pby9vcmVvbmRldi9oYXJib3ItbWNwOmxhdGVzdCJdLCJlbnYiOnsiSEFSQk9SX1VSTCI6Imh0dHBzOi8vaGFyYm9yLmV4YW1wbGUuY29tIiwiSEFSQk9SX1VTRVJOQU1FIjoicm9ib3QkaGFyYm9yLW1jcCIsIkhBUkJPUl9QQVNTV09SRCI6Ii4uLiJ9fQ%3D%3D)
+
 Claude Code, with the image (replace 0.1.1 with the latest release):
 
 ```sh
