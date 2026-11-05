@@ -1,0 +1,13 @@
+# Version updates for the operator module only: it carries the Harbor client
+# and the fake Harbor, so a new operator release should reach harbor-mcp soon.
+# Other dependencies get security updates (enabled in the repository settings).
+version: 2
+updates:
+  - package-ecosystem: gomod
+    directory: /
+    target-branch: develop
+    schedule:
+      interval: daily
+    allow:
+      - dependency-name: github.com/oreondev/harbor-resource-operator
+    labels: []
