@@ -1,5 +1,5 @@
 /*
-Copyright 2026 Fahri Cap.
+Copyright 2026 Oreon IT.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -119,6 +119,26 @@ func TestReadToolsAreAnnotatedAndDescribed(t *testing.T) {
 		}
 		if tool.OutputSchema == nil {
 			t.Errorf("%s: want an output schema", tool.Name)
+		}
+	}
+}
+
+func TestCatalogMatchesAConnectedClient(t *testing.T) {
+	srv := newHarbor(t)
+	res, err := connect(t, srv.URL(), adminUser, adminPass).ListTools(context.Background(), nil)
+	if err != nil {
+		t.Fatalf("list tools: %v", err)
+	}
+	catalog, err := server.Catalog(context.Background(), "test")
+	if err != nil {
+		t.Fatalf("catalog: %v", err)
+	}
+	if len(catalog) != len(res.Tools) {
+		t.Fatalf("catalog has %d tools, a client sees %d", len(catalog), len(res.Tools))
+	}
+	for i, tool := range catalog {
+		if tool.Name != res.Tools[i].Name || tool.Description != res.Tools[i].Description {
+			t.Errorf("tool %d: catalog %q, client %q", i, tool.Name, res.Tools[i].Name)
 		}
 	}
 }

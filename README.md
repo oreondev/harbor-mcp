@@ -2,11 +2,13 @@
 
 A [Model Context Protocol](https://modelcontextprotocol.io) server for [Harbor](https://goharbor.io), the open-source container registry. It lets AI assistants such as Claude, Cursor and VS Code answer questions about a running Harbor: projects and quotas, repositories and artifacts, vulnerability scan results, robot accounts, replication health and garbage collection.
 
+Documentation: **https://www.oreonit.com/harbor-mcp/**
+
 This is an independent community project. It is not affiliated with or endorsed by the Harbor project or the CNCF; Harbor is a trademark of The Linux Foundation.
 
 ## Status
 
-Version 0.1.0 is the first release. The twelve read tools work over stdio and streamable HTTP, and are tested against a fake Harbor, Harbor 2.15 on every pull request and Harbor 2.12 to 2.15 nightly, as an administrator and as the read-only robot below. The design is in [docs/DESIGN.md](docs/DESIGN.md).
+Changes per release are in the [release notes](CHANGELOG.md). The twelve read tools work over stdio and streamable HTTP, and are tested against a fake Harbor, Harbor 2.15 on every pull request and Harbor 2.12 to 2.15 nightly, as an administrator and as the read-only robot below. The design is in [docs/DESIGN.md](docs/DESIGN.md).
 
 - Read-only: twelve tools covering projects, repositories, artifacts, vulnerabilities, robots, members, registries, replication, webhooks and garbage collection. Write tools (scan, start replication, add a label, create a project) will come later, only with an explicit opt-in. No tool deletes anything.
 - Secrets stay out of the conversation: Harbor credentials, robot secrets and webhook authorization headers never appear in tool results, logs or errors.
@@ -50,11 +52,11 @@ Configuration comes from environment variables; each except `HARBOR_CA_FILE` can
 | `HARBOR_MCP_RATE` | requests per second to Harbor, default 10 |
 | `HARBOR_MCP_HTTP_TOKEN` | bearer token for HTTP mode |
 
-Claude Code, with the image (replace 0.1.0 with the latest release):
+Claude Code, with the image (replace 0.1.1 with the latest release):
 
 ```sh
 claude mcp add harbor -e HARBOR_URL=https://harbor.example.com -e 'HARBOR_USERNAME=robot$harbor-mcp' -e HARBOR_PASSWORD=... \
-  -- docker run -i --rm -e HARBOR_URL -e HARBOR_USERNAME -e HARBOR_PASSWORD ghcr.io/oreondev/harbor-mcp:0.1.0
+  -- docker run -i --rm -e HARBOR_URL -e HARBOR_USERNAME -e HARBOR_PASSWORD ghcr.io/oreondev/harbor-mcp:0.1.1
 ```
 
 Claude Desktop, Cursor and other clients that read an `mcpServers` file:
@@ -65,7 +67,7 @@ Claude Desktop, Cursor and other clients that read an `mcpServers` file:
     "harbor": {
       "command": "docker",
       "args": ["run", "-i", "--rm", "-e", "HARBOR_URL", "-e", "HARBOR_USERNAME", "-e", "HARBOR_PASSWORD",
-               "ghcr.io/oreondev/harbor-mcp:0.1.0"],
+               "ghcr.io/oreondev/harbor-mcp:0.1.1"],
       "env": {
         "HARBOR_URL": "https://harbor.example.com",
         "HARBOR_USERNAME": "robot$harbor-mcp",
@@ -84,7 +86,7 @@ For a shared server, for example a Deployment next to Harbor, start it with `-ht
 
 ```sh
 docker run -d -p 8080:8080 -e HARBOR_URL -e HARBOR_USERNAME -e HARBOR_PASSWORD -e HARBOR_MCP_HTTP_TOKEN \
-  ghcr.io/oreondev/harbor-mcp:0.1.0 -http :8080
+  ghcr.io/oreondev/harbor-mcp:0.1.1 -http :8080
 claude mcp add --transport http harbor https://harbor-mcp.example.com/mcp -H "Authorization: Bearer $HARBOR_MCP_HTTP_TOKEN"
 ```
 
@@ -93,7 +95,7 @@ MCP is served at `/mcp` and every request needs the token; `GET /healthz` is ope
 ### Verify the image
 
 ```sh
-cosign verify ghcr.io/oreondev/harbor-mcp:0.1.0 \
+cosign verify ghcr.io/oreondev/harbor-mcp:0.1.1 \
   --certificate-identity-regexp '^https://github.com/oreondev/harbor-mcp/\.github/workflows/release\.yml@' \
   --certificate-oidc-issuer https://token.actions.githubusercontent.com
 ```

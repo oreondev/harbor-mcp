@@ -17,3 +17,11 @@ go.work
 CLAUDE.local.md
 .env
 *.kubeconfig
+
+# Docs site (generated)
+/site/
+/docs/tools.md
+/docs/changelog.md
+
+# Python bytecode from the docs hooks
+__pycache__/
