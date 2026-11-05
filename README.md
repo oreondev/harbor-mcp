@@ -8,7 +8,7 @@ This is an independent community project. It is not affiliated with or endorsed 
 
 ## Status
 
-Version 0.1.0 is the first release. The twelve read tools work over stdio and streamable HTTP, and are tested against a fake Harbor, Harbor 2.15 on every pull request and Harbor 2.12 to 2.15 nightly, as an administrator and as the read-only robot below. The design is in [docs/DESIGN.md](docs/DESIGN.md).
+Changes per release are in the [release notes](CHANGELOG.md). The twelve read tools work over stdio and streamable HTTP, and are tested against a fake Harbor, Harbor 2.15 on every pull request and Harbor 2.12 to 2.15 nightly, as an administrator and as the read-only robot below. The design is in [docs/DESIGN.md](docs/DESIGN.md).
 
 - Read-only: twelve tools covering projects, repositories, artifacts, vulnerabilities, robots, members, registries, replication, webhooks and garbage collection. Write tools (scan, start replication, add a label, create a project) will come later, only with an explicit opt-in. No tool deletes anything.
 - Secrets stay out of the conversation: Harbor credentials, robot secrets and webhook authorization headers never appear in tool results, logs or errors.
