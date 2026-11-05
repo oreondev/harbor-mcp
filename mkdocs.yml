@@ -6,7 +6,7 @@ repo_url: https://github.com/oreondev/harbor-mcp
 repo_name: oreondev/harbor-mcp
 edit_uri: edit/develop/docs/
 copyright: >-
-  Copyright 2026 Fahri Cap. Maintained by <a href="https://www.oreonit.com">Oreon IT</a>.
+  Copyright 2026 <a href="https://www.oreonit.com">Oreon IT</a>.
   Apache-2.0. Harbor is a trademark of The Linux Foundation; this project is not affiliated with the Harbor project or the CNCF.
 
 docs_dir: docs
@@ -74,6 +74,7 @@ nav:
   - Tools: tools.md
   - Project:
       - Design: DESIGN.md
-      - Releases: https://github.com/oreondev/harbor-mcp/releases
+      - Release notes: changelog.md
+      - GitHub releases: https://github.com/oreondev/harbor-mcp/releases
       - Security: https://github.com/oreondev/harbor-mcp/blob/main/SECURITY.md
       - Harbor Resource Operator: https://www.oreonit.com/harbor-operator/
