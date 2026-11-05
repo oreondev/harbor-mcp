@@ -3,7 +3,7 @@
   "name": "io.github.oreondev/harbor-mcp",
   "title": "Harbor",
   "description": "Read-only access to a Harbor registry: projects, artifacts, vulnerabilities, robots and replication.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "repository": {
     "url": "https://github.com/oreondev/harbor-mcp",
     "source": "github"
@@ -12,7 +12,7 @@
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/oreondev/harbor-mcp:0.1.0",
+      "identifier": "ghcr.io/oreondev/harbor-mcp:0.1.1",
       "transport": {
         "type": "stdio"
       },

@@ -4,9 +4,12 @@ All notable changes are listed here, newest first. Versions follow [semantic ver
 
 ## Unreleased
 
+## 0.1.1 - 2026-11-05
+
 - Documentation site at <https://www.oreonit.com/harbor-mcp/>, with a tool reference generated from the server, and these release notes ([#10](https://github.com/oreondev/harbor-mcp/pull/10)).
 - `harbor-mcp -list-tools` prints every tool with its schemas and annotations as JSON ([#10](https://github.com/oreondev/harbor-mcp/pull/10)).
 - Builds from `go install` report the module version instead of `dev` ([#10](https://github.com/oreondev/harbor-mcp/pull/10)).
+- The MCP Registry entry links to the documentation site (`websiteUrl`).
 
 ## 0.1.0 - 2026-11-04
 

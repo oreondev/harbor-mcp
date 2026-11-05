@@ -52,11 +52,11 @@ Configuration comes from environment variables; each except `HARBOR_CA_FILE` can
 | `HARBOR_MCP_RATE` | requests per second to Harbor, default 10 |
 | `HARBOR_MCP_HTTP_TOKEN` | bearer token for HTTP mode |
 
-Claude Code, with the image (replace 0.1.0 with the latest release):
+Claude Code, with the image (replace 0.1.1 with the latest release):
 
 ```sh
 claude mcp add harbor -e HARBOR_URL=https://harbor.example.com -e 'HARBOR_USERNAME=robot$harbor-mcp' -e HARBOR_PASSWORD=... \
-  -- docker run -i --rm -e HARBOR_URL -e HARBOR_USERNAME -e HARBOR_PASSWORD ghcr.io/oreondev/harbor-mcp:0.1.0
+  -- docker run -i --rm -e HARBOR_URL -e HARBOR_USERNAME -e HARBOR_PASSWORD ghcr.io/oreondev/harbor-mcp:0.1.1
 ```
 
 Claude Desktop, Cursor and other clients that read an `mcpServers` file:
@@ -67,7 +67,7 @@ Claude Desktop, Cursor and other clients that read an `mcpServers` file:
     "harbor": {
       "command": "docker",
       "args": ["run", "-i", "--rm", "-e", "HARBOR_URL", "-e", "HARBOR_USERNAME", "-e", "HARBOR_PASSWORD",
-               "ghcr.io/oreondev/harbor-mcp:0.1.0"],
+               "ghcr.io/oreondev/harbor-mcp:0.1.1"],
       "env": {
         "HARBOR_URL": "https://harbor.example.com",
         "HARBOR_USERNAME": "robot$harbor-mcp",
@@ -86,7 +86,7 @@ For a shared server, for example a Deployment next to Harbor, start it with `-ht
 
 ```sh
 docker run -d -p 8080:8080 -e HARBOR_URL -e HARBOR_USERNAME -e HARBOR_PASSWORD -e HARBOR_MCP_HTTP_TOKEN \
-  ghcr.io/oreondev/harbor-mcp:0.1.0 -http :8080
+  ghcr.io/oreondev/harbor-mcp:0.1.1 -http :8080
 claude mcp add --transport http harbor https://harbor-mcp.example.com/mcp -H "Authorization: Bearer $HARBOR_MCP_HTTP_TOKEN"
 ```
 
@@ -95,7 +95,7 @@ MCP is served at `/mcp` and every request needs the token; `GET /healthz` is ope
 ### Verify the image
 
 ```sh
-cosign verify ghcr.io/oreondev/harbor-mcp:0.1.0 \
+cosign verify ghcr.io/oreondev/harbor-mcp:0.1.1 \
   --certificate-identity-regexp '^https://github.com/oreondev/harbor-mcp/\.github/workflows/release\.yml@' \
   --certificate-oidc-issuer https://token.actions.githubusercontent.com
 ```
