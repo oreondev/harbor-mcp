@@ -1,5 +1,8 @@
 # Harbor MCP server
 
+[![oreondev/harbor-mcp MCP server](https://glama.ai/mcp/servers/oreondev/harbor-mcp/badges/score.svg)](https://glama.ai/mcp/servers/oreondev/harbor-mcp)
+[![Listed on mcpservers.org](https://mcpservers.org/badge.svg)](https://mcpservers.org/servers/oreondev/harbor-mcp)
+
 A [Model Context Protocol](https://modelcontextprotocol.io) server for [Harbor](https://goharbor.io), the open-source container registry. It lets AI assistants such as Claude, Cursor and VS Code answer questions about a running Harbor: projects and quotas, repositories and artifacts, vulnerability scan results, robot accounts, replication health and garbage collection.
 
 Documentation: **https://www.oreonit.com/harbor-mcp/**
