@@ -4,6 +4,7 @@ All notable changes are listed here, newest first. Versions follow [semantic ver
 
 ## Unreleased
 
+- A client that passes an unfilled `${VAR}` placeholder (a Cursor plugin before Configure) now gets "HARBOR_URL is the placeholder ${HARBOR_URL}: set its value in the MCP client's settings" instead of a URL format error.
 - The repository is a Cursor plugin: `.cursor-plugin/plugin.json` and `mcp.json` start the server from the release image, with the Harbor URL and robot credentials set in Cursor's plugin settings, and `skills/` adds three skills: vulnerability triage, access audit, and replication and garbage collection health. The release bump keeps the plugin on the current image.
 
 ## 0.2.0 - 2026-11-08

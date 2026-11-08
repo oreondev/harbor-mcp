@@ -19,4 +19,30 @@ Uses the Harbor MCP server's read tools. Nothing is changed in Harbor.
 
 Robot secrets are never returned by the tools, so never ask the user for them.
 
-If the user manages Harbor as code with the Harbor Resource Operator (https://www.oreonit.com/harbor-operator/), the suggestions can be written as HarborRobotAccount or HarborProjectMember manifests.
+If the user manages Harbor as code with the Harbor Resource Operator (https://www.oreonit.com/harbor-operator/), a suggestion can be written as a manifest. Use only the fields in this example and the reference pages (https://www.oreonit.com/harbor-operator/latest/reference/harborrobotaccount/); do not invent others. For a robot that already exists in Harbor, `adoptExisting: true` takes it over, and because Harbor never reveals an existing secret, adopting it issues a new one into the Secret named below:
+
+```yaml
+apiVersion: harbor.oreonit.com/v1alpha1
+kind: HarborRobotAccount
+metadata:
+  name: demo-ci
+  namespace: demo              # where the operator's objects for this team live
+spec:
+  connectionRef:
+    name: prod-harbor          # the user's HarborConnection
+    namespace: harbor-system
+  name: ci-forever             # robot$demo+ci-forever in Harbor
+  level: project
+  projectName: demo            # or projectRef: {name: <HarborProject>} when the project is managed too
+  duration: 90
+  permissions:
+  - access:
+    - { resource: repository, action: push }
+    - { resource: repository, action: pull }
+  secret:
+    name: demo-ci-regcred
+    type: kubernetes.io/dockerconfigjson
+  rotation:
+    beforeExpiry: 168h
+  adoptExisting: true
+```

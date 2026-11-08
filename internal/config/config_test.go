@@ -72,6 +72,13 @@ func TestLoadErrorsNameTheVariableNotTheValue(t *testing.T) {
 	if strings.Contains(msg, "top-secret") {
 		t.Fatalf("error leaks the password: %q", msg)
 	}
+	_, err = config.Load(env(map[string]string{
+		"HARBOR_URL": "${HARBOR_URL}", "HARBOR_USERNAME": "u", "HARBOR_PASSWORD": "${HARBOR_PASSWORD}",
+	}))
+	if err == nil || !strings.Contains(err.Error(), "HARBOR_URL is the placeholder ${HARBOR_URL}") ||
+		!strings.Contains(err.Error(), "HARBOR_PASSWORD is the placeholder") || strings.Contains(err.Error(), "must start") {
+		t.Fatalf("unexpanded placeholders: %v", err)
+	}
 	if _, err := config.Load(env(map[string]string{})); err == nil || !strings.Contains(err.Error(), "HARBOR_URL is required") {
 		t.Fatalf("empty environment: %v", err)
 	}

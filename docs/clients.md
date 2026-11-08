@@ -85,11 +85,10 @@ The repository is also a Cursor plugin: the server, started from the image, plus
 | `harbor-access-audit` | members, robot accounts, their permissions and expiry |
 | `harbor-replication-health` | failed or stale replication, unhealthy registries, garbage collection |
 
-To use it from a clone, link it into Cursor's local plugins and restart Cursor:
+To use it before or without the marketplace, clone it into Cursor's local plugins and restart Cursor (Cursor ignores a symlink that points outside that directory):
 
 ```sh
-git clone https://github.com/oreondev/harbor-mcp
-ln -s "$PWD/harbor-mcp" ~/.cursor/plugins/local/harbor-mcp
+git clone https://github.com/oreondev/harbor-mcp ~/.cursor/plugins/local/harbor-mcp
 ```
 
 Then set the Harbor URL, robot name and secret under **Plugins**, **Harbor MCP**, **Configure**; Cursor keeps them out of the plugin's files. The skills are plain [Agent Skills](https://agentskills.io/specification), so they also work in Claude Code and other clients that read `SKILL.md` folders.
