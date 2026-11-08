@@ -653,6 +653,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     HTTP mode
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../skills/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent skills
   
 
     
@@ -1186,8 +1216,20 @@ sha256sum<span class="w"> </span>--ignore-missing<span class="w"> </span>-c<span
 <td><code>HARBOR_MCP_HTTP_TOKEN</code></td>
 <td>Bearer token for <a href="../http/">HTTP mode</a></td>
 </tr>
+<tr>
+<td><code>HARBOR_MCP_SKILLS_DIR</code></td>
+<td>Absolute path of a skills directory (for example <code>/home/me/.claude/skills</code>); registers <code>harbor_install_skill</code>, which installs skills from Harbor there. Meant for stdio; in HTTP mode the skills land on the server's machine, and the server warns</td>
+</tr>
+<tr>
+<td><code>HARBOR_MCP_SKILLS_REQUIRE_SIGNED</code></td>
+<td><code>false</code> to let <code>harbor_install_skill</code> install skills without a cosign signature; default <code>true</code></td>
+</tr>
 </tbody>
 </table>
+<p>With Docker, mount the skills directory and run as your own user, so the installed files belong to you:</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>-i<span class="w"> </span>--rm<span class="w"> </span>--user<span class="w"> </span><span class="s2">"</span><span class="k">$(</span>id<span class="w"> </span>-u<span class="k">)</span><span class="s2">:</span><span class="k">$(</span>id<span class="w"> </span>-g<span class="k">)</span><span class="s2">"</span><span class="w"> </span>-v<span class="w"> </span><span class="s2">"</span><span class="nv">$HOME</span><span class="s2">/.claude/skills:/skills"</span><span class="w"> </span>-e<span class="w"> </span><span class="nv">HARBOR_MCP_SKILLS_DIR</span><span class="o">=</span>/skills<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-e<span class="w"> </span>HARBOR_URL<span class="w"> </span>-e<span class="w"> </span>HARBOR_USERNAME<span class="w"> </span>-e<span class="w"> </span>HARBOR_PASSWORD<span class="w"> </span>ghcr.io/oreondev/harbor-mcp:0.1.1
+</code></pre></div>
 <h2 id="flags">Flags<a class="headerlink" href="#flags" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
