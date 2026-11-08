@@ -22,6 +22,7 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"sync"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 	"github.com/oreondev/harbor-resource-operator/pkg/harbor"
@@ -36,6 +37,12 @@ type Options struct {
 	Username string
 	// AllowWrite registers the write tools.
 	AllowWrite bool
+	// SkillsDir, when set, registers harbor_install_skill, which installs
+	// skills into this directory.
+	SkillsDir string
+	// SkillsRequireSigned makes harbor_install_skill refuse skills without a
+	// cosign signature.
+	SkillsRequireSigned bool
 	// Secrets are removed from every error text before it reaches a client:
 	// the Harbor password and the HTTP token.
 	Secrets []string
@@ -54,16 +61,20 @@ func New(hc *harbor.Client, o Options) *mcp.Server {
 		Version:    o.Version,
 		WebsiteURL: "https://github.com/oreondev/harbor-mcp",
 	}, &mcp.ServerOptions{Instructions: instructions})
-	t := &tools{hc: hc, username: o.Username, secrets: nonEmpty(o.Secrets)}
+	t := &tools{hc: hc, username: o.Username, secrets: nonEmpty(o.Secrets),
+		skillsDir: o.SkillsDir, requireSigned: o.SkillsRequireSigned}
 	t.register(s)
 	return s
 }
 
 // tools holds what every tool handler needs.
 type tools struct {
-	hc       *harbor.Client
-	username string
-	secrets  []string
+	hc            *harbor.Client
+	username      string
+	secrets       []string
+	skillsDir     string
+	requireSigned bool
+	installMu     sync.Mutex // one install at a time
 }
 
 // readOnly annotates a tool that only reads from Harbor.

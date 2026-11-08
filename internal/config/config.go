@@ -21,6 +21,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 )
@@ -39,6 +40,11 @@ type Config struct {
 	AllowWrite bool
 	// HTTPToken is the bearer token every HTTP request must carry in HTTP mode.
 	HTTPToken string
+	// SkillsDir, when set, registers harbor_install_skill, which installs
+	// skills into it. It is an absolute path.
+	SkillsDir string
+	// SkillsRequireSigned makes harbor_install_skill refuse unsigned skills.
+	SkillsRequireSigned bool
 }
 
 // DefaultRate is the request rate to Harbor when HARBOR_MCP_RATE is unset.
@@ -82,6 +88,18 @@ func Load(getenv func(string) string) (Config, error) {
 	}
 	if c.AllowWrite, err = boolVar(get("HARBOR_MCP_ALLOW_WRITE")); err != nil {
 		errs = append(errs, fmt.Errorf("HARBOR_MCP_ALLOW_WRITE: %w", err))
+	}
+	if c.SkillsDir = get("HARBOR_MCP_SKILLS_DIR"); c.SkillsDir != "" {
+		if !filepath.IsAbs(c.SkillsDir) {
+			errs = append(errs, fmt.Errorf("HARBOR_MCP_SKILLS_DIR: want an absolute path, got %q", c.SkillsDir))
+		}
+		c.SkillsDir = filepath.Clean(c.SkillsDir)
+	}
+	c.SkillsRequireSigned = true
+	if s := get("HARBOR_MCP_SKILLS_REQUIRE_SIGNED"); s != "" {
+		if c.SkillsRequireSigned, err = strconv.ParseBool(s); err != nil {
+			errs = append(errs, fmt.Errorf("HARBOR_MCP_SKILLS_REQUIRE_SIGNED: %w", err))
+		}
 	}
 	c.Rate = DefaultRate
 	if s := get("HARBOR_MCP_RATE"); s != "" {

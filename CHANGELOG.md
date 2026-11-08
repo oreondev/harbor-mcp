@@ -4,6 +4,9 @@ All notable changes are listed here, newest first. Versions follow [semantic ver
 
 ## Unreleased
 
+- Agent skills stored in Harbor as OCI artifacts (the [Agent Skills OCI artifacts](https://github.com/ThomasVitale/agents-skills-oci-artifacts-spec) format): `harbor_list_skills` lists the skills in a project with version, tags and whether they are signed; `harbor_get_skill` returns a skill's `SKILL.md` or another of its files, read through the manifest so the project's cosign policy applies, with size, path and link checks on the content. Reading a skill needs `repository:pull` on its project.
+- `harbor_install_skill`, registered only when `HARBOR_MCP_SKILLS_DIR` is set, installs a skill into that directory with a `.harbor-skill.json` marker; it replaces only its own earlier install of the same repository and refuses unsigned skills unless `HARBOR_MCP_SKILLS_REQUIRE_SIGNED=false`.
+
 ## 0.1.1 - 2026-11-05
 
 - Documentation site at <https://www.oreonit.com/harbor-mcp/>, with a tool reference generated from the server, and these release notes ([#10](https://github.com/oreondev/harbor-mcp/pull/10)).

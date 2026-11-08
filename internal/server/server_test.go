@@ -44,12 +44,19 @@ const (
 // client session over the SDK's in-memory transport.
 func connect(t *testing.T, baseURL, user, pass string) *mcp.ClientSession {
 	t.Helper()
+	return connectWith(t, baseURL, user, pass, server.Options{})
+}
+
+// connectWith is connect with options; Version, Username and Secrets are set.
+func connectWith(t *testing.T, baseURL, user, pass string, o server.Options) *mcp.ClientSession {
+	t.Helper()
 	ctx := context.Background()
 	hc, err := harbor.New(harbor.Options{URL: baseURL, Username: user, Password: pass})
 	if err != nil {
 		t.Fatalf("harbor client: %v", err)
 	}
-	s := server.New(hc, server.Options{Version: "test", Username: user, Secrets: []string{pass, httpToken}})
+	o.Version, o.Username, o.Secrets = "test", user, []string{pass, httpToken}
+	s := server.New(hc, o)
 	st, ct := mcp.NewInMemoryTransports()
 	ss, err := s.Connect(ctx, st, nil)
 	if err != nil {
@@ -125,7 +132,8 @@ func TestReadToolsAreAnnotatedAndDescribed(t *testing.T) {
 
 func TestCatalogMatchesAConnectedClient(t *testing.T) {
 	srv := newHarbor(t)
-	res, err := connect(t, srv.URL(), adminUser, adminPass).ListTools(context.Background(), nil)
+	cs := connectWith(t, srv.URL(), adminUser, adminPass, server.Options{SkillsDir: server.CatalogSkillsDir})
+	res, err := cs.ListTools(context.Background(), nil)
 	if err != nil {
 		t.Fatalf("list tools: %v", err)
 	}

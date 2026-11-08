@@ -23,15 +23,20 @@ import (
 	"github.com/oreondev/harbor-resource-operator/pkg/harbor"
 )
 
+// CatalogSkillsDir is the skills directory Catalog registers the install
+// tool with; nothing is written to it.
+const CatalogSkillsDir = "/skills"
+
 // Catalog returns the tool definitions, as a client sees them, without a
-// Harbor: the docs and the directory listings are generated from it.
+// Harbor: the docs and the directory listings are generated from it. It
+// includes the tools that need opting in.
 func Catalog(ctx context.Context, version string) ([]*mcp.Tool, error) {
 	hc, err := harbor.New(harbor.Options{URL: "https://harbor.invalid"})
 	if err != nil {
 		return nil, err
 	}
 	st, ct := mcp.NewInMemoryTransports()
-	ss, err := New(hc, Options{Version: version}).Connect(ctx, st, nil)
+	ss, err := New(hc, Options{Version: version, SkillsDir: CatalogSkillsDir}).Connect(ctx, st, nil)
 	if err != nil {
 		return nil, err
 	}
