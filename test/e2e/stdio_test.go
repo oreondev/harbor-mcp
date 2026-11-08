@@ -56,7 +56,13 @@ func binary(t *testing.T) string {
 // server's stderr. env is added to the test's environment.
 func start(t *testing.T, env ...string) (*mcp.ClientSession, *strings.Builder) {
 	t.Helper()
-	cmd := exec.Command(binary(t))
+	return startBinary(t, binary(t), env...)
+}
+
+// startBinary is start with a binary that is already built.
+func startBinary(t *testing.T, bin string, env ...string) (*mcp.ClientSession, *strings.Builder) {
+	t.Helper()
+	cmd := exec.Command(bin)
 	cmd.Env = append(os.Environ(), env...)
 	stderr := &strings.Builder{}
 	cmd.Stderr = stderr

@@ -6,7 +6,7 @@ Status: version 0.1.0 is released with the read tools (section 4), both transpor
 
 A Model Context Protocol (MCP) server that lets AI assistants (Claude, Cursor, VS Code, Docker's MCP Toolkit, ToolHive on Kubernetes) answer questions about a running Harbor: which projects exist and how full their quotas are, what was pushed recently, which artifacts have critical vulnerabilities, whether replication is healthy, which robot accounts expire soon. It reuses the Harbor client and the fake Harbor from [harbor-resource-operator](https://github.com/oreondev/harbor-resource-operator) (`pkg/harbor`, `pkg/harbor/fake`), which are tested against Harbor 2.12 to 2.15, pinned to an operator release.
 
-Scope matches the operator's: objects inside a running Harbor through API v2.0. It does not install Harbor, does not move image contents, and never deletes anything.
+Scope matches the operator's: objects inside a running Harbor through API v2.0. It does not install Harbor, does not move image contents (the one exception is reading agent skills, section 10, which are small text artifacts), and never deletes anything.
 
 On 2026-11-03 no maintained Harbor MCP server existed: `bupd/harbor-mcp-server` (TypeScript, 12 tools, last push 2026-02-20, not official), `nomagicln/mcp-harbor` (archived), and no Harbor entry in the official MCP Registry.
 
@@ -34,6 +34,8 @@ Environment variables, each with a `_FILE` variant for mounted Secrets:
 | `HARBOR_MCP_RATE` | Requests per second to Harbor, default 10, shared by all tools (the operator's limiter) |
 | `HARBOR_MCP_ALLOW_WRITE` | `true` registers the write tools (section 5); off by default |
 | `HARBOR_MCP_HTTP_TOKEN` | Bearer token required on every HTTP request in `-http` mode; the server refuses to start in HTTP mode without one unless `-http` binds to a loopback address |
+| `HARBOR_MCP_SKILLS_DIR` | Absolute path; registers `harbor_install_skill` (section 10.3) |
+| `HARBOR_MCP_SKILLS_REQUIRE_SIGNED` | `false` lets `harbor_install_skill` install unsigned skills; default `true` |
 
 Credentials and the HTTP token are never logged, never returned in tool output and never included in error messages. Robot secrets and webhook `auth_header` values are removed from every result.
 
@@ -99,3 +101,69 @@ Harbor errors map to MCP tool errors (`isError: true`) with Harbor's status code
 6. e2e spec.
 7. Listings (section 8).
 8. Write tools, then the Helm chart.
+
+## 10. Agent skills
+
+Harbor as the registry for the agent skills a team writes: a skill (a folder with `SKILL.md`, as in the [Agent Skills](https://agentskills.io/specification) format) is pushed to a Harbor project as an OCI artifact, signed, and listed, read and installed through this server. Design version 2026-11-06.
+
+### 10.1 Format
+
+The [Agent Skills OCI artifacts spec](https://github.com/ThomasVitale/agents-skills-oci-artifacts-spec) (v0.1.0 draft, April 2026). On 2026-11-06 it had the most implementations (arconia-cli, salaboy/skills-oci), NVIDIA's agent-package-spec builds on it, and it can be pushed with plain ORAS. One manifest per skill version:
+
+| Field | Value |
+|---|---|
+| `artifactType` | `application/vnd.agentskills.skill.v1` |
+| config | `application/vnd.agentskills.skill.config.v1+json` (name, description and the other `SKILL.md` frontmatter) |
+| one layer | `application/vnd.agentskills.skill.content.v1.tar+gzip`, rooted at `<skill-name>/` |
+| annotations | `io.agentskills.skill.name` (required), `org.opencontainers.image.{title,description,version,source,revision,licenses}` |
+| tags | the version (`1.2.0`, immutable by a tag rule), plus `latest` |
+
+Convention: one repository per skill, `<project>/<skill-name>`. Other formats (NVIDIA, ToolHive, Alibaba ACR) are listed with their type but not read until one of them is adopted more widely.
+
+### 10.2 What Harbor does with it (checked on Harbor 2.15, 2026-11-06)
+
+- The artifact gets `type: SKILL` (Harbor's default processor derives it from the config media type), `artifact_type`, the manifest annotations, and the config JSON as `extra_attrs`. Listing skills needs only the REST API; `q=type=SKILL` filters a repository's artifacts.
+- `GET /v2/<project>/<repo>/manifests/<ref>` and `/blobs/<digest>` accept basic auth, so reading a skill needs no token service.
+- With the project's `enable_content_trust_cosign` on, a manifest pull of an unsigned artifact returns 412 `PROJECTPOLICYVIOLATION` "The image is not signed by cosign."; a blob pull by digest is not checked. This server therefore always resolves the manifest first, so the project policy decides whether a skill can be read.
+- Harbor's scanners only take `IMAGE` artifacts (`controller/scan/util.go`, read in the source), so Harbor does not scan skills. Scanning happens in CI before the push (NVIDIA SkillSpector or Cisco skill-scanner, both Apache-2.0); the report can be attached as a referrer (an attestation) next to the signature.
+
+### 10.3 Tools
+
+Read tools, registered by default (they read only what the robot can pull):
+
+| Tool | Harbor calls | Returns |
+|---|---|---|
+| `harbor_list_skills` | `GET /projects/{p}/repositories`, then `GET .../artifacts?q=type=SKILL&with_tag=true&with_accessory=true` per repository | per skill: name, description, version, tags, digest, push time, whether a cosign signature is attached; paged over repositories |
+| `harbor_get_skill` | the artifact, then `GET /v2/.../manifests/{ref}` and `/blobs/{layer}` | the `SKILL.md` text, the file list with sizes, digest, version, signed; optional `path` returns one other text file of the skill |
+
+Install, registered only when `HARBOR_MCP_SKILLS_DIR` is set (stdio use; in HTTP mode the directory would be on the server, which is rarely what the user wants, so the server warns):
+
+| Tool | Does |
+|---|---|
+| `harbor_install_skill` | reads the skill as `harbor_get_skill` does, writes it to a temporary directory inside `<dir>` through `os.Root`, with `.harbor-skill.json` (repository, digest, version, signed), and renames it to `<dir>/<skill-name>/`. Refuses when that path exists and is not a directory with a marker naming the same repository (a symlink, a file, a directory it did not install); a failed install leaves the old one in place. A skill that carries its own marker file is refused. With `HARBOR_MCP_SKILLS_REQUIRE_SIGNED=true` (default) it refuses a skill without a cosign signature accessory. Annotated destructive and idempotent; one install at a time |
+
+Permissions: listing needs only what the documented robot has. Reading and installing need `repository:pull`, which that robot does not have; the docs add a second project-level entry granting `repository:pull` on the skills projects only (`namespace: "skills"`, not `*`), so the robot still cannot read image contents elsewhere. Without it the tools report Harbor's 401 or 403 with that hint.
+
+Limits on every read: compressed layer at most 1 MiB, unpacked at most 4 MiB and 500 entries; only regular files and directories; no absolute paths, `..`, symlinks or hard links; mode bits limited to 0644 and 0755. Text returned to the model is capped at 64 KiB per file. A skill is instructions for the model, so tool results say which project and digest it came from and whether it is signed.
+
+Signing: the server checks that a signature exists; it does not verify it cryptographically. Verification is Harbor's job (`enableContentTrustCosign` on the project, which Harbor enforces at pull time; keyless identities are checked by `cosign verify` in CI). The docs recommend the policy for every skills project.
+
+### 10.4 Client and fake (operator repository first)
+
+- `Artifact` gains `ArtifactType`, `Annotations`, `ExtraAttrs` and `Accessories` (type, digest); `ListArtifactsOfType(ctx, project, repo, type, po)` adds `q=type=<T>` and `with_accessory=true`.
+- `GetManifest(ctx, project, repo, ref)` and `GetBlob(ctx, project, repo, digest, limit)` on the registry API (`/v2/`, basic auth, digest checked, `limit` enforced while reading). A 412 policy violation becomes an `APIError` with Harbor's message.
+- The fake stores manifests, blobs, artifact types and accessories, filters by `q=type=`, and can enforce the cosign policy per project, with the 412 body above.
+
+### 10.5 Around the server
+
+- Push: documented with ORAS (`oras push --artifact-type application/vnd.agentskills.skill.v1 --config ...`) and a GitHub Actions workflow: pack, scan with SkillSpector, push to Harbor, `cosign sign` keyless, attach the scan report. No CLI of our own; arconia-cli and skr exist.
+- Operator: a sample for a skills project: `HarborProject` with `enableContentTrustCosign`, an immutable tag rule for version tags, a retention policy keeping the last ten versions, a CI robot that can push and an agent robot that can only pull.
+- Docs: a "Skills in Harbor" page on both sites, and a blog post.
+
+### 10.6 Order of work
+
+1. Client and fake in the operator repository (10.4), with tests and a Harbor e2e check; release the operator patch and bump the pin here.
+2. `harbor_list_skills` and `harbor_get_skill`, with tests against the fake, including the unpack limits and a hostile tarball.
+3. `harbor_install_skill`.
+4. e2e on kind: push a skill with oras-go, sign it with cosign, list, read and install it as the read-only robot, with the project policy on and off.
+5. Operator sample, push workflow, docs page, blog post.

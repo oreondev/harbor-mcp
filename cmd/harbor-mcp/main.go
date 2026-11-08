@@ -106,7 +106,15 @@ func run(log *slog.Logger, httpAddr string) error {
 	}
 	s := server.New(hc, server.Options{
 		Version: version, Username: cfg.Username, AllowWrite: cfg.AllowWrite, Secrets: []string{cfg.Password, cfg.HTTPToken},
+		SkillsDir: cfg.SkillsDir, SkillsRequireSigned: cfg.SkillsRequireSigned,
 	})
+	if cfg.SkillsDir != "" {
+		log.Info("harbor_install_skill installs into HARBOR_MCP_SKILLS_DIR", "dir", cfg.SkillsDir,
+			"requireSigned", cfg.SkillsRequireSigned)
+		if httpAddr != "" {
+			log.Warn("HARBOR_MCP_SKILLS_DIR is set in HTTP mode: skills are installed on this server's machine, not the clients'")
+		}
+	}
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
 	if httpAddr == "" {

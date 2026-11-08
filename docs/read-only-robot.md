@@ -23,6 +23,8 @@ Harbor shows the secret once, in the response; the user name is `robot$harbor-mc
 
 Nothing in the list allows a change: no `create`, `update`, `delete`, `push` or `pull`.
 
+Reading [agent skills](skills.md) needs `pull` on the skills project; that page shows how to add it for that project only.
+
 !!! note
     The robot has no expiry (`duration: -1`). Set a duration in days if your policy requires rotation, and update the client's secret when you refresh it.
 
