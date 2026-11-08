@@ -95,6 +95,8 @@ Claude Desktop, Cursor and other clients that read an `mcpServers` file:
 
 Without Docker, download a binary from the [releases](https://github.com/oreondev/harbor-mcp/releases) (or `go install github.com/oreondev/harbor-mcp/cmd/harbor-mcp@latest`) and use `harbor-mcp` as the command.
 
+The repository is also a Cursor plugin (`.cursor-plugin/plugin.json`): the server plus three skills for vulnerability triage, access audits and replication health, in [`skills/`](skills). See [Connect a client](https://www.oreonit.com/harbor-mcp/latest/clients/#cursor-plugin).
+
 ### HTTP mode
 
 For a shared server, for example a Deployment next to Harbor, start it with `-http` and a token:

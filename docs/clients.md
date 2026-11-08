@@ -75,6 +75,24 @@ Every client starts the server the same way: the container image (or the binary)
     { "command": "harbor-mcp", "env": { "HARBOR_URL": "https://harbor.example.com", "HARBOR_USERNAME": "robot$harbor-mcp", "HARBOR_PASSWORD": "..." } }
     ```
 
+## Cursor plugin
+
+The repository is also a Cursor plugin: the server, started from the image, plus three skills that tell the assistant how to use the tools for common questions:
+
+| Skill | For |
+|---|---|
+| `harbor-vulnerability-triage` | the worst vulnerabilities in a project and what to fix first |
+| `harbor-access-audit` | members, robot accounts, their permissions and expiry |
+| `harbor-replication-health` | failed or stale replication, unhealthy registries, garbage collection |
+
+To use it before or without the marketplace, clone it into Cursor's local plugins and restart Cursor (Cursor ignores a symlink that points outside that directory):
+
+```sh
+git clone https://github.com/oreondev/harbor-mcp ~/.cursor/plugins/local/harbor-mcp
+```
+
+Then set the Harbor URL, robot name and secret under **Plugins**, **Harbor MCP**, **Configure**; Cursor keeps them out of the plugin's files. The skills are plain [Agent Skills](https://agentskills.io/specification), so they also work in Claude Code and other clients that read `SKILL.md` folders.
+
 Then ask, for example, *"What Harbor version is this, and who am I connected as?"*: the assistant calls `harbor_system_info` and should answer with the version and `robot$harbor-mcp`.
 
 !!! tip "Harbor with a private CA"

@@ -4,11 +4,14 @@ All notable changes are listed here, newest first. Versions follow [semantic ver
 
 ## Unreleased
 
+- A client that passes an unfilled `${VAR}` placeholder (a Cursor plugin before Configure) now gets "HARBOR_URL is the placeholder ${HARBOR_URL}: set its value in the MCP client's settings" instead of a URL format error.
+- The repository is a Cursor plugin: `.cursor-plugin/plugin.json` and `mcp.json` start the server from the release image, with the Harbor URL and robot credentials set in Cursor's plugin settings, and `skills/` adds three skills: vulnerability triage, access audit, and replication and garbage collection health. The release bump keeps the plugin on the current image.
+
 ## 0.2.0 - 2026-11-08
 
 - Agent skills stored in Harbor as OCI artifacts (the [Agent Skills OCI artifacts](https://github.com/ThomasVitale/agents-skills-oci-artifacts-spec) format): `harbor_list_skills` lists the skills in a project with version, tags and whether they are signed; `harbor_get_skill` returns a skill's `SKILL.md` or another of its files, read through the manifest so the project's cosign policy applies, with size, path and link checks on the content. Reading a skill needs `repository:pull` on its project ([#20](https://github.com/oreondev/harbor-mcp/pull/20)).
 - `harbor_install_skill`, registered only when `HARBOR_MCP_SKILLS_DIR` is set, installs a skill into that directory with a `.harbor-skill.json` marker; it replaces only its own earlier install of the same repository and refuses unsigned skills unless `HARBOR_MCP_SKILLS_REQUIRE_SIGNED=false` ([#20](https://github.com/oreondev/harbor-mcp/pull/20)).
-- An [Agent skills](https://www.oreonit.com/harbor-mcp/skills/) docs page: pushing with ORAS, signing, the extra `repository:pull` permission for the skills project, and installing. The end-to-end suite pushes, signs, lists, reads and installs a skill as that robot, with the project's cosign policy off and on ([#20](https://github.com/oreondev/harbor-mcp/pull/20)).
+- An [Agent skills](https://www.oreonit.com/harbor-mcp/latest/skills/) docs page: pushing with ORAS, signing, the extra `repository:pull` permission for the skills project, and installing. The end-to-end suite pushes, signs, lists, reads and installs a skill as that robot, with the project's cosign policy off and on ([#20](https://github.com/oreondev/harbor-mcp/pull/20)).
 - Harbor error messages no longer end in a double full stop when the server adds a hint ([#20](https://github.com/oreondev/harbor-mcp/pull/20)).
 
 ## 0.1.1 - 2026-11-05

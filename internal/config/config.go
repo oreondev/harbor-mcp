@@ -22,6 +22,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strconv"
 	"strings"
 )
@@ -60,6 +61,12 @@ func Load(getenv func(string) string) (Config, error) {
 		v, err := value(getenv, name)
 		if err != nil {
 			errs = append(errs, err)
+		}
+		if placeholderRe.MatchString(v) {
+			// A client that passed its own ${VAR} placeholder through unset,
+			// such as a Cursor plugin before Configure.
+			errs = append(errs, fmt.Errorf("%s is the placeholder %s: set its value in the MCP client's settings", name, v))
+			return ""
 		}
 		return v
 	}
@@ -111,6 +118,9 @@ func Load(getenv func(string) string) (Config, error) {
 	}
 	return c, errors.Join(errs...)
 }
+
+// placeholderRe matches an unexpanded client variable such as ${HARBOR_URL}.
+var placeholderRe = regexp.MustCompile(`^\$\{[A-Za-z0-9_:.-]+\}$`)
 
 // value returns name from the environment or from the file named by name_FILE.
 func value(getenv func(string) string, name string) (string, error) {
