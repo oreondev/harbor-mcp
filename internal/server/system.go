@@ -33,6 +33,7 @@ func (t *tools) register(s *mcp.Server) {
 	t.registerAccess(s)
 	t.registerReplication(s)
 	t.registerAdmin(s)
+	t.registerSkills(s)
 }
 
 // SystemInfo is the result of harbor_system_info.

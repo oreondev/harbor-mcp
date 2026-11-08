@@ -48,6 +48,15 @@ Configuration comes from environment variables. Each one except `HARBOR_CA_FILE`
 | `HARBOR_INSECURE_SKIP_VERIFY` | `true` to skip TLS verification of Harbor |
 | `HARBOR_MCP_RATE` | Requests per second to Harbor, default 10 |
 | `HARBOR_MCP_HTTP_TOKEN` | Bearer token for [HTTP mode](http.md) |
+| `HARBOR_MCP_SKILLS_DIR` | Absolute path of a skills directory (for example `/home/me/.claude/skills`); registers `harbor_install_skill`, which installs skills from Harbor there. Meant for stdio; in HTTP mode the skills land on the server's machine, and the server warns |
+| `HARBOR_MCP_SKILLS_REQUIRE_SIGNED` | `false` to let `harbor_install_skill` install skills without a cosign signature; default `true` |
+
+With Docker, mount the skills directory and run as your own user, so the installed files belong to you:
+
+```sh
+docker run -i --rm --user "$(id -u):$(id -g)" -v "$HOME/.claude/skills:/skills" -e HARBOR_MCP_SKILLS_DIR=/skills \
+  -e HARBOR_URL -e HARBOR_USERNAME -e HARBOR_PASSWORD ghcr.io/oreondev/harbor-mcp:{{ version }}
+```
 
 ## Flags
 

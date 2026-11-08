@@ -19,7 +19,7 @@ Ask things like:
 - **[Install](install.md)**: container image, binaries or `go install`.
 - **[Connect a client](clients.md)**: Claude Code, Claude Desktop, Cursor, VS Code.
 - **[Read-only identity](read-only-robot.md)**: a Harbor robot account that can only read.
-- **[Tools](tools.md)**: the twelve tools and their arguments.
+- **[Tools](tools.md)**: the tools and their arguments.
 
 </div>
 

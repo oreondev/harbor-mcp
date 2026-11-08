@@ -11,9 +11,10 @@ This is an independent community project. It is not affiliated with or endorsed 
 
 ## Status
 
-Changes per release are in the [release notes](CHANGELOG.md). The twelve read tools work over stdio and streamable HTTP, and are tested against a fake Harbor, Harbor 2.15 on every pull request and Harbor 2.12 to 2.15 nightly, as an administrator and as the read-only robot below. The design is in [docs/DESIGN.md](docs/DESIGN.md).
+Changes per release are in the [release notes](CHANGELOG.md). The read tools work over stdio and streamable HTTP, and are tested against a fake Harbor, Harbor 2.15 on every pull request and Harbor 2.12 to 2.15 nightly, as an administrator and as the read-only robot below. The design is in [docs/DESIGN.md](docs/DESIGN.md).
 
-- Read-only: twelve tools covering projects, repositories, artifacts, vulnerabilities, robots, members, registries, replication, webhooks and garbage collection. Write tools (scan, start replication, add a label, create a project) will come later, only with an explicit opt-in. No tool deletes anything.
+- Read-only towards Harbor: fourteen tools covering projects, repositories, artifacts, vulnerabilities, robots, members, registries, replication, webhooks, garbage collection and agent skills stored in Harbor. Write tools (scan, start replication, add a label, create a project) will come later, only with an explicit opt-in. No tool deletes anything in Harbor.
+- Opt-in skill install: with `HARBOR_MCP_SKILLS_DIR` set, `harbor_install_skill` writes a skill from Harbor into that directory on your machine, signed skills only by default.
 - Secrets stay out of the conversation: Harbor credentials, robot secrets and webhook authorization headers never appear in tool results, logs or errors.
 - stdio for desktop clients, and streamable HTTP with a bearer token for running in a cluster.
 - A signed multi-arch image, `ghcr.io/oreondev/harbor-mcp`, listed in the official MCP Registry as `io.github.oreondev/harbor-mcp`.
@@ -30,6 +31,10 @@ Changes per release are in the [release notes](CHANGELOG.md). The twelve read to
 | `harbor_list_members`, `harbor_list_robots` | who has access: members with roles, robot accounts with permissions and expiry |
 | `harbor_list_registries`, `harbor_list_replications` | replication endpoints and policies, with the last run |
 | `harbor_list_webhooks`, `harbor_get_gc` | webhook policies; the garbage collection schedule |
+| `harbor_list_skills`, `harbor_get_skill` | agent skills stored in a project as OCI artifacts; one skill's `SKILL.md` and files, digest and signature status |
+| `harbor_install_skill` | installs a skill into `HARBOR_MCP_SKILLS_DIR` (registered only when that is set) |
+
+Pushing, signing and installing skills, and the extra pull permission reading them needs: [docs/skills.md](docs/skills.md).
 
 ## Set up a read-only Harbor identity
 
@@ -54,6 +59,8 @@ Configuration comes from environment variables; each except `HARBOR_CA_FILE` can
 | `HARBOR_INSECURE_SKIP_VERIFY` | `true` to skip TLS verification of Harbor |
 | `HARBOR_MCP_RATE` | requests per second to Harbor, default 10 |
 | `HARBOR_MCP_HTTP_TOKEN` | bearer token for HTTP mode |
+| `HARBOR_MCP_SKILLS_DIR` | absolute path of a skills directory, for example `/home/me/.claude/skills`; registers `harbor_install_skill`, which installs skills there |
+| `HARBOR_MCP_SKILLS_REQUIRE_SIGNED` | `false` to also install skills without a cosign signature; default `true` |
 
 One-click install (the client asks for the URL and credentials, or you fill them in afterwards):
 

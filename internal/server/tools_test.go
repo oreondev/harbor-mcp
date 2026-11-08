@@ -104,6 +104,8 @@ func seeded(t *testing.T) *fake.Server {
 		Targets: []harbor.WebhookTarget{{Type: "http", Address: "https://siem.example.com/hook", AuthHeader: webhookSecret}}}); err != nil {
 		t.Fatal(err)
 	}
+	srv.AddRepository("team-a", "review")
+	pushSkill(t, srv, "team-a", "review", "review", "1.0.0", skillLayer(t, "review", map[string]string{"SKILL.md": reviewMD}), "1.0.0")
 	srv.AddGCRun("Success")
 	must(t, hc.CreateGCSchedule(ctx, harbor.GCSchedule{Schedule: &harbor.ScheduleObj{Type: "Daily", Cron: "0 0 0 * * *"}}))
 	return srv
@@ -275,8 +277,14 @@ func TestNoSecretsInAnyResult(t *testing.T) {
 		t.Fatal(err)
 	}
 	args := map[string]any{"project": "library", "repository": "team/app", "reference": "1.1", "minSeverity": "Unknown"}
+	perTool := map[string]map[string]any{
+		"harbor_list_skills": {"project": "team-a"},
+		"harbor_get_skill":   {"project": "team-a", "repository": "review", "reference": "1.0.0"},
+	}
 	for _, tool := range tools.Tools {
 		props := map[string]any{}
+		args := maps.Clone(args)
+		maps.Copy(args, perTool[tool.Name])
 		if s, isMap := tool.InputSchema.(map[string]any); isMap {
 			if p, hasProps := s["properties"].(map[string]any); hasProps {
 				for k := range p {

@@ -87,6 +87,7 @@ nav:
   - Guides:
       - Read-only identity: read-only-robot.md
       - HTTP mode: http.md
+      - Agent skills: skills.md
   - Tools: tools.md
   - Project:
       - Release notes: changelog.md
