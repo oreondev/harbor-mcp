@@ -1182,6 +1182,7 @@
 <p>All notable changes are listed here, newest first. Versions follow <a href="https://semver.org">semantic versioning</a>. Each release also has a <a href="https://github.com/oreondev/harbor-mcp/releases">GitHub release</a> with the image digest, binaries and signed checksums.</p>
 <h2 id="unreleased">Unreleased<a class="headerlink" href="#unreleased" title="Permanent link">&para;</a></h2>
 <ul>
+<li>A client that passes an unfilled <code>${VAR}</code> placeholder (a Cursor plugin before Configure) now gets "HARBOR_URL is the placeholder ${HARBOR_URL}: set its value in the MCP client's settings" instead of a URL format error.</li>
 <li>The repository is a Cursor plugin: <code>.cursor-plugin/plugin.json</code> and <code>mcp.json</code> start the server from the release image, with the Harbor URL and robot credentials set in Cursor's plugin settings, and <code>skills/</code> adds three skills: vulnerability triage, access audit, and replication and garbage collection health. The release bump keeps the plugin on the current image.</li>
 </ul>
 <h2 id="020-2026-11-08">0.2.0 - 2026-11-08<a class="headerlink" href="#020-2026-11-08" title="Permanent link">&para;</a></h2>

@@ -1196,9 +1196,8 @@
 </tr>
 </tbody>
 </table>
-<p>To use it from a clone, link it into Cursor's local plugins and restart Cursor:</p>
-<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/oreondev/harbor-mcp
-ln<span class="w"> </span>-s<span class="w"> </span><span class="s2">"</span><span class="nv">$PWD</span><span class="s2">/harbor-mcp"</span><span class="w"> </span>~/.cursor/plugins/local/harbor-mcp
+<p>To use it before or without the marketplace, clone it into Cursor's local plugins and restart Cursor (Cursor ignores a symlink that points outside that directory):</p>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/oreondev/harbor-mcp<span class="w"> </span>~/.cursor/plugins/local/harbor-mcp
 </code></pre></div>
 <p>Then set the Harbor URL, robot name and secret under <strong>Plugins</strong>, <strong>Harbor MCP</strong>, <strong>Configure</strong>; Cursor keeps them out of the plugin's files. The skills are plain <a href="https://agentskills.io/specification">Agent Skills</a>, so they also work in Claude Code and other clients that read <code>SKILL.md</code> folders.</p>
 <p>Then ask, for example, <em>"What Harbor version is this, and who am I connected as?"</em>: the assistant calls <code>harbor_system_info</code> and should answer with the version and <code>robot$harbor-mcp</code>.</p>
