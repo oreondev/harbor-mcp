@@ -4,6 +4,8 @@ All notable changes are listed here, newest first. Versions follow [semantic ver
 
 ## Unreleased
 
+- The repository is a Cursor plugin: `.cursor-plugin/plugin.json` and `mcp.json` start the server from the release image, with the Harbor URL and robot credentials set in Cursor's plugin settings, and `skills/` adds three skills: vulnerability triage, access audit, and replication and garbage collection health. The release bump keeps the plugin on the current image.
+
 ## 0.2.0 - 2026-11-08
 
 - Agent skills stored in Harbor as OCI artifacts (the [Agent Skills OCI artifacts](https://github.com/ThomasVitale/agents-skills-oci-artifacts-spec) format): `harbor_list_skills` lists the skills in a project with version, tags and whether they are signed; `harbor_get_skill` returns a skill's `SKILL.md` or another of its files, read through the manifest so the project's cosign policy applies, with size, path and link checks on the content. Reading a skill needs `repository:pull` on its project ([#20](https://github.com/oreondev/harbor-mcp/pull/20)).

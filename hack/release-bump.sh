@@ -14,7 +14,8 @@
 # limitations under the License.
 
 # Bumps every versioned file to X.Y.Z for a release: server.json (version and
-# image), the README image references and CHANGELOG.md (Unreleased becomes
+# image), the README image references, the Cursor plugin (.cursor-plugin/plugin.json
+# and mcp.json) and CHANGELOG.md (Unreleased becomes
 # "X.Y.Z - today"). Run it on a chore/release-X.Y.Z branch from develop; it
 # does not commit.
 set -euo pipefail
@@ -40,6 +41,9 @@ old_re=${old//./\\.}
 # Only the version field and image references, so jq's formatting is not needed.
 sed -i -E -e "s/(\"version\": \")$old_re\"/\1$new\"/" -e "s/(harbor-mcp:)$old_re\"/\1$new\"/" server.json
 sed -i -E -e "s/(harbor-mcp:)$old_re([^0-9]|$)/\1$new\2/g" -e "s/replace $old_re with/replace $new with/" README.md
+# The Cursor plugin: its version and the image it starts.
+sed -i -E "s/(\"version\": \")$old_re\"/\1$new\"/" .cursor-plugin/plugin.json
+sed -i -E "s/(harbor-mcp:)$old_re\"/\1$new\"/" mcp.json
 sed -i "s/^## Unreleased$/## Unreleased\n\n## $new - $(date -u +%F)/" CHANGELOG.md
 make validate-server-json
 
