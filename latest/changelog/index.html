@@ -568,6 +568,8 @@
       
         
       
+        
+      
     
     
     
@@ -656,6 +658,34 @@
     
   
     HTTP mode
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../skills/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent skills
   
 
     
@@ -850,6 +880,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#020-2026-11-08" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.2.0 - 2026-11-08
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#011-2026-11-05" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1037,6 +1078,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#020-2026-11-08" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.2.0 - 2026-11-08
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#011-2026-11-05" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1129,6 +1181,13 @@
 <h1 id="changelog">Changelog<a class="headerlink" href="#changelog" title="Permanent link">&para;</a></h1>
 <p>All notable changes are listed here, newest first. Versions follow <a href="https://semver.org">semantic versioning</a>. Each release also has a <a href="https://github.com/oreondev/harbor-mcp/releases">GitHub release</a> with the image digest, binaries and signed checksums.</p>
 <h2 id="unreleased">Unreleased<a class="headerlink" href="#unreleased" title="Permanent link">&para;</a></h2>
+<h2 id="020-2026-11-08">0.2.0 - 2026-11-08<a class="headerlink" href="#020-2026-11-08" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Agent skills stored in Harbor as OCI artifacts (the <a href="https://github.com/ThomasVitale/agents-skills-oci-artifacts-spec">Agent Skills OCI artifacts</a> format): <code>harbor_list_skills</code> lists the skills in a project with version, tags and whether they are signed; <code>harbor_get_skill</code> returns a skill's <code>SKILL.md</code> or another of its files, read through the manifest so the project's cosign policy applies, with size, path and link checks on the content. Reading a skill needs <code>repository:pull</code> on its project (<a href="https://github.com/oreondev/harbor-mcp/pull/20">#20</a>).</li>
+<li><code>harbor_install_skill</code>, registered only when <code>HARBOR_MCP_SKILLS_DIR</code> is set, installs a skill into that directory with a <code>.harbor-skill.json</code> marker; it replaces only its own earlier install of the same repository and refuses unsigned skills unless <code>HARBOR_MCP_SKILLS_REQUIRE_SIGNED=false</code> (<a href="https://github.com/oreondev/harbor-mcp/pull/20">#20</a>).</li>
+<li>An <a href="https://www.oreonit.com/harbor-mcp/skills/">Agent skills</a> docs page: pushing with ORAS, signing, the extra <code>repository:pull</code> permission for the skills project, and installing. The end-to-end suite pushes, signs, lists, reads and installs a skill as that robot, with the project's cosign policy off and on (<a href="https://github.com/oreondev/harbor-mcp/pull/20">#20</a>).</li>
+<li>Harbor error messages no longer end in a double full stop when the server adds a hint (<a href="https://github.com/oreondev/harbor-mcp/pull/20">#20</a>).</li>
+</ul>
 <h2 id="011-2026-11-05">0.1.1 - 2026-11-05<a class="headerlink" href="#011-2026-11-05" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Documentation site at <a href="https://www.oreonit.com/harbor-mcp/">https://www.oreonit.com/harbor-mcp/</a>, with a tool reference generated from the server, and these release notes (<a href="https://github.com/oreondev/harbor-mcp/pull/10">#10</a>).</li>

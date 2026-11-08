@@ -566,6 +566,8 @@
       
         
       
+        
+      
     
     
     
@@ -654,6 +656,34 @@
     
   
     HTTP mode
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../skills/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent skills
   
 
     
@@ -963,6 +993,89 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#10-agent-skills" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Agent skills
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. Agent skills">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#101-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.1 Format
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#102-what-harbor-does-with-it-checked-on-harbor-215-2026-11-06" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2 What Harbor does with it (checked on Harbor 2.15, 2026-11-06)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#103-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.3 Tools
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#104-client-and-fake-operator-repository-first" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.4 Client and fake (operator repository first)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#105-around-the-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.5 Around the server
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#106-order-of-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.6 Order of work
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1188,6 +1301,89 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#10-agent-skills" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Agent skills
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. Agent skills">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#101-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.1 Format
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#102-what-harbor-does-with-it-checked-on-harbor-215-2026-11-06" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2 What Harbor does with it (checked on Harbor 2.15, 2026-11-06)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#103-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.3 Tools
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#104-client-and-fake-operator-repository-first" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.4 Client and fake (operator repository first)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#105-around-the-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.5 Around the server
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#106-order-of-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.6 Order of work
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1260,7 +1456,7 @@
 <p>Status: version 0.1.0 is released with the read tools (section 4), both transports and the release workflow. Version 0.5, 2026-11-04.</p>
 <h2 id="1-purpose">1. Purpose<a class="headerlink" href="#1-purpose" title="Permanent link">&para;</a></h2>
 <p>A Model Context Protocol (MCP) server that lets AI assistants (Claude, Cursor, VS Code, Docker's MCP Toolkit, ToolHive on Kubernetes) answer questions about a running Harbor: which projects exist and how full their quotas are, what was pushed recently, which artifacts have critical vulnerabilities, whether replication is healthy, which robot accounts expire soon. It reuses the Harbor client and the fake Harbor from <a href="https://github.com/oreondev/harbor-resource-operator">harbor-resource-operator</a> (<code>pkg/harbor</code>, <code>pkg/harbor/fake</code>), which are tested against Harbor 2.12 to 2.15, pinned to an operator release.</p>
-<p>Scope matches the operator's: objects inside a running Harbor through API v2.0. It does not install Harbor, does not move image contents, and never deletes anything.</p>
+<p>Scope matches the operator's: objects inside a running Harbor through API v2.0. It does not install Harbor, does not move image contents (the one exception is reading agent skills, section 10, which are small text artifacts), and never deletes anything.</p>
 <p>On 2026-11-03 no maintained Harbor MCP server existed: <code>bupd/harbor-mcp-server</code> (TypeScript, 12 tools, last push 2026-02-20, not official), <code>nomagicln/mcp-harbor</code> (archived), and no Harbor entry in the official MCP Registry.</p>
 <h2 id="2-shape">2. Shape<a class="headerlink" href="#2-shape" title="Permanent link">&para;</a></h2>
 <table>
@@ -1334,6 +1530,14 @@
 <tr>
 <td><code>HARBOR_MCP_HTTP_TOKEN</code></td>
 <td>Bearer token required on every HTTP request in <code>-http</code> mode; the server refuses to start in HTTP mode without one unless <code>-http</code> binds to a loopback address</td>
+</tr>
+<tr>
+<td><code>HARBOR_MCP_SKILLS_DIR</code></td>
+<td>Absolute path; registers <code>harbor_install_skill</code> (section 10.3)</td>
+</tr>
+<tr>
+<td><code>HARBOR_MCP_SKILLS_REQUIRE_SIGNED</code></td>
+<td><code>false</code> lets <code>harbor_install_skill</code> install unsigned skills; default <code>true</code></td>
 </tr>
 </tbody>
 </table>
@@ -1467,6 +1671,109 @@
 <li>e2e spec.</li>
 <li>Listings (section 8).</li>
 <li>Write tools, then the Helm chart.</li>
+</ol>
+<h2 id="10-agent-skills">10. Agent skills<a class="headerlink" href="#10-agent-skills" title="Permanent link">&para;</a></h2>
+<p>Harbor as the registry for the agent skills a team writes: a skill (a folder with <code>SKILL.md</code>, as in the <a href="https://agentskills.io/specification">Agent Skills</a> format) is pushed to a Harbor project as an OCI artifact, signed, and listed, read and installed through this server. Design version 2026-11-06.</p>
+<h3 id="101-format">10.1 Format<a class="headerlink" href="#101-format" title="Permanent link">&para;</a></h3>
+<p>The <a href="https://github.com/ThomasVitale/agents-skills-oci-artifacts-spec">Agent Skills OCI artifacts spec</a> (v0.1.0 draft, April 2026). On 2026-11-06 it had the most implementations (arconia-cli, salaboy/skills-oci), NVIDIA's agent-package-spec builds on it, and it can be pushed with plain ORAS. One manifest per skill version:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>artifactType</code></td>
+<td><code>application/vnd.agentskills.skill.v1</code></td>
+</tr>
+<tr>
+<td>config</td>
+<td><code>application/vnd.agentskills.skill.config.v1+json</code> (name, description and the other <code>SKILL.md</code> frontmatter)</td>
+</tr>
+<tr>
+<td>one layer</td>
+<td><code>application/vnd.agentskills.skill.content.v1.tar+gzip</code>, rooted at <code>&lt;skill-name&gt;/</code></td>
+</tr>
+<tr>
+<td>annotations</td>
+<td><code>io.agentskills.skill.name</code> (required), <code>org.opencontainers.image.{title,description,version,source,revision,licenses}</code></td>
+</tr>
+<tr>
+<td>tags</td>
+<td>the version (<code>1.2.0</code>, immutable by a tag rule), plus <code>latest</code></td>
+</tr>
+</tbody>
+</table>
+<p>Convention: one repository per skill, <code>&lt;project&gt;/&lt;skill-name&gt;</code>. Other formats (NVIDIA, ToolHive, Alibaba ACR) are listed with their type but not read until one of them is adopted more widely.</p>
+<h3 id="102-what-harbor-does-with-it-checked-on-harbor-215-2026-11-06">10.2 What Harbor does with it (checked on Harbor 2.15, 2026-11-06)<a class="headerlink" href="#102-what-harbor-does-with-it-checked-on-harbor-215-2026-11-06" title="Permanent link">&para;</a></h3>
+<ul>
+<li>The artifact gets <code>type: SKILL</code> (Harbor's default processor derives it from the config media type), <code>artifact_type</code>, the manifest annotations, and the config JSON as <code>extra_attrs</code>. Listing skills needs only the REST API; <code>q=type=SKILL</code> filters a repository's artifacts.</li>
+<li><code>GET /v2/&lt;project&gt;/&lt;repo&gt;/manifests/&lt;ref&gt;</code> and <code>/blobs/&lt;digest&gt;</code> accept basic auth, so reading a skill needs no token service.</li>
+<li>With the project's <code>enable_content_trust_cosign</code> on, a manifest pull of an unsigned artifact returns 412 <code>PROJECTPOLICYVIOLATION</code> "The image is not signed by cosign."; a blob pull by digest is not checked. This server therefore always resolves the manifest first, so the project policy decides whether a skill can be read.</li>
+<li>Harbor's scanners only take <code>IMAGE</code> artifacts (<code>controller/scan/util.go</code>, read in the source), so Harbor does not scan skills. Scanning happens in CI before the push (NVIDIA SkillSpector or Cisco skill-scanner, both Apache-2.0); the report can be attached as a referrer (an attestation) next to the signature.</li>
+</ul>
+<h3 id="103-tools">10.3 Tools<a class="headerlink" href="#103-tools" title="Permanent link">&para;</a></h3>
+<p>Read tools, registered by default (they read only what the robot can pull):</p>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Harbor calls</th>
+<th>Returns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>harbor_list_skills</code></td>
+<td><code>GET /projects/{p}/repositories</code>, then <code>GET .../artifacts?q=type=SKILL&amp;with_tag=true&amp;with_accessory=true</code> per repository</td>
+<td>per skill: name, description, version, tags, digest, push time, whether a cosign signature is attached; paged over repositories</td>
+</tr>
+<tr>
+<td><code>harbor_get_skill</code></td>
+<td>the artifact, then <code>GET /v2/.../manifests/{ref}</code> and <code>/blobs/{layer}</code></td>
+<td>the <code>SKILL.md</code> text, the file list with sizes, digest, version, signed; optional <code>path</code> returns one other text file of the skill</td>
+</tr>
+</tbody>
+</table>
+<p>Install, registered only when <code>HARBOR_MCP_SKILLS_DIR</code> is set (stdio use; in HTTP mode the directory would be on the server, which is rarely what the user wants, so the server warns):</p>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>harbor_install_skill</code></td>
+<td>reads the skill as <code>harbor_get_skill</code> does, writes it to a temporary directory inside <code>&lt;dir&gt;</code> through <code>os.Root</code>, with <code>.harbor-skill.json</code> (repository, digest, version, signed), and renames it to <code>&lt;dir&gt;/&lt;skill-name&gt;/</code>. Refuses when that path exists and is not a directory with a marker naming the same repository (a symlink, a file, a directory it did not install); a failed install leaves the old one in place. A skill that carries its own marker file is refused. With <code>HARBOR_MCP_SKILLS_REQUIRE_SIGNED=true</code> (default) it refuses a skill without a cosign signature accessory. Annotated destructive and idempotent; one install at a time</td>
+</tr>
+</tbody>
+</table>
+<p>Permissions: listing needs only what the documented robot has. Reading and installing need <code>repository:pull</code>, which that robot does not have; the docs add a second project-level entry granting <code>repository:pull</code> on the skills projects only (<code>namespace: "skills"</code>, not <code>*</code>), so the robot still cannot read image contents elsewhere. Without it the tools report Harbor's 401 or 403 with that hint.</p>
+<p>Limits on every read: compressed layer at most 1 MiB, unpacked at most 4 MiB and 500 entries; only regular files and directories; no absolute paths, <code>..</code>, symlinks or hard links; mode bits limited to 0644 and 0755. Text returned to the model is capped at 64 KiB per file. A skill is instructions for the model, so tool results say which project and digest it came from and whether it is signed.</p>
+<p>Signing: the server checks that a signature exists; it does not verify it cryptographically. Verification is Harbor's job (<code>enableContentTrustCosign</code> on the project, which Harbor enforces at pull time; keyless identities are checked by <code>cosign verify</code> in CI). The docs recommend the policy for every skills project.</p>
+<h3 id="104-client-and-fake-operator-repository-first">10.4 Client and fake (operator repository first)<a class="headerlink" href="#104-client-and-fake-operator-repository-first" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>Artifact</code> gains <code>ArtifactType</code>, <code>Annotations</code>, <code>ExtraAttrs</code> and <code>Accessories</code> (type, digest); <code>ListArtifactsOfType(ctx, project, repo, type, po)</code> adds <code>q=type=&lt;T&gt;</code> and <code>with_accessory=true</code>.</li>
+<li><code>GetManifest(ctx, project, repo, ref)</code> and <code>GetBlob(ctx, project, repo, digest, limit)</code> on the registry API (<code>/v2/</code>, basic auth, digest checked, <code>limit</code> enforced while reading). A 412 policy violation becomes an <code>APIError</code> with Harbor's message.</li>
+<li>The fake stores manifests, blobs, artifact types and accessories, filters by <code>q=type=</code>, and can enforce the cosign policy per project, with the 412 body above.</li>
+</ul>
+<h3 id="105-around-the-server">10.5 Around the server<a class="headerlink" href="#105-around-the-server" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Push: documented with ORAS (<code>oras push --artifact-type application/vnd.agentskills.skill.v1 --config ...</code>) and a GitHub Actions workflow: pack, scan with SkillSpector, push to Harbor, <code>cosign sign</code> keyless, attach the scan report. No CLI of our own; arconia-cli and skr exist.</li>
+<li>Operator: a sample for a skills project: <code>HarborProject</code> with <code>enableContentTrustCosign</code>, an immutable tag rule for version tags, a retention policy keeping the last ten versions, a CI robot that can push and an agent robot that can only pull.</li>
+<li>Docs: a "Skills in Harbor" page on both sites, and a blog post.</li>
+</ul>
+<h3 id="106-order-of-work">10.6 Order of work<a class="headerlink" href="#106-order-of-work" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Client and fake in the operator repository (10.4), with tests and a Harbor e2e check; release the operator patch and bump the pin here.</li>
+<li><code>harbor_list_skills</code> and <code>harbor_get_skill</code>, with tests against the fake, including the unpack limits and a hostile tarball.</li>
+<li><code>harbor_install_skill</code>.</li>
+<li>e2e on kind: push a skill with oras-go, sign it with cosign, list, read and install it as the read-only robot, with the project policy on and off.</li>
+<li>Operator sample, push workflow, docs page, blog post.</li>
 </ol>
 
 

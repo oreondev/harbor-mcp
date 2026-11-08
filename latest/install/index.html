@@ -653,6 +653,8 @@
       
         
       
+        
+      
     
     
     
@@ -741,6 +743,34 @@
     
   
     HTTP mode
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../skills/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent skills
   
 
     
@@ -1130,16 +1160,16 @@
 <div class="tabbed-set tabbed-alternate" data-tabs="1:3"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Container image</label><label for="__tabbed_1_2">Binary</label><label for="__tabbed_1_3">go install</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>pull<span class="w"> </span>ghcr.io/oreondev/harbor-mcp:0.1.1
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>pull<span class="w"> </span>ghcr.io/oreondev/harbor-mcp:0.2.0
 </code></pre></div>
 <p>Multi-arch (amd64, arm64), distroless, non-root, about 12 MB. Verify the signature:</p>
-<div class="highlight"><pre><span></span><code>cosign<span class="w"> </span>verify<span class="w"> </span>ghcr.io/oreondev/harbor-mcp:0.1.1<span class="w"> </span><span class="se">\</span>
+<div class="highlight"><pre><span></span><code>cosign<span class="w"> </span>verify<span class="w"> </span>ghcr.io/oreondev/harbor-mcp:0.2.0<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--certificate-identity-regexp<span class="w"> </span><span class="s1">'^https://github.com/oreondev/harbor-mcp/\.github/workflows/release\.yml@'</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--certificate-oidc-issuer<span class="w"> </span>https://token.actions.githubusercontent.com
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<p>Download the archive for your platform (Linux, macOS, Windows; amd64 and arm64) from the <a href="https://github.com/oreondev/harbor-mcp/releases/tag/v0.1.1">releases</a>. <code>checksums.txt</code> is signed; verify it with:</p>
+<p>Download the archive for your platform (Linux, macOS, Windows; amd64 and arm64) from the <a href="https://github.com/oreondev/harbor-mcp/releases/tag/v0.2.0">releases</a>. <code>checksums.txt</code> is signed; verify it with:</p>
 <div class="highlight"><pre><span></span><code>cosign<span class="w"> </span>verify-blob<span class="w"> </span>--bundle<span class="w"> </span>checksums.txt.sigstore.json<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--certificate-identity-regexp<span class="w"> </span><span class="s1">'^https://github.com/oreondev/harbor-mcp/\.github/workflows/release\.yml@'</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--certificate-oidc-issuer<span class="w"> </span>https://token.actions.githubusercontent.com<span class="w"> </span>checksums.txt
@@ -1147,7 +1177,7 @@ sha256sum<span class="w"> </span>--ignore-missing<span class="w"> </span>-c<span
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code>go<span class="w"> </span>install<span class="w"> </span>github.com/oreondev/harbor-mcp/cmd/harbor-mcp@v0.1.1
+<div class="highlight"><pre><span></span><code>go<span class="w"> </span>install<span class="w"> </span>github.com/oreondev/harbor-mcp/cmd/harbor-mcp@v0.2.0
 </code></pre></div>
 </div>
 </div>
@@ -1186,8 +1216,20 @@ sha256sum<span class="w"> </span>--ignore-missing<span class="w"> </span>-c<span
 <td><code>HARBOR_MCP_HTTP_TOKEN</code></td>
 <td>Bearer token for <a href="../http/">HTTP mode</a></td>
 </tr>
+<tr>
+<td><code>HARBOR_MCP_SKILLS_DIR</code></td>
+<td>Absolute path of a skills directory (for example <code>/home/me/.claude/skills</code>); registers <code>harbor_install_skill</code>, which installs skills from Harbor there. Meant for stdio; in HTTP mode the skills land on the server's machine, and the server warns</td>
+</tr>
+<tr>
+<td><code>HARBOR_MCP_SKILLS_REQUIRE_SIGNED</code></td>
+<td><code>false</code> to let <code>harbor_install_skill</code> install skills without a cosign signature; default <code>true</code></td>
+</tr>
 </tbody>
 </table>
+<p>With Docker, mount the skills directory and run as your own user, so the installed files belong to you:</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>-i<span class="w"> </span>--rm<span class="w"> </span>--user<span class="w"> </span><span class="s2">"</span><span class="k">$(</span>id<span class="w"> </span>-u<span class="k">)</span><span class="s2">:</span><span class="k">$(</span>id<span class="w"> </span>-g<span class="k">)</span><span class="s2">"</span><span class="w"> </span>-v<span class="w"> </span><span class="s2">"</span><span class="nv">$HOME</span><span class="s2">/.claude/skills:/skills"</span><span class="w"> </span>-e<span class="w"> </span><span class="nv">HARBOR_MCP_SKILLS_DIR</span><span class="o">=</span>/skills<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-e<span class="w"> </span>HARBOR_URL<span class="w"> </span>-e<span class="w"> </span>HARBOR_USERNAME<span class="w"> </span>-e<span class="w"> </span>HARBOR_PASSWORD<span class="w"> </span>ghcr.io/oreondev/harbor-mcp:0.2.0
+</code></pre></div>
 <h2 id="flags">Flags<a class="headerlink" href="#flags" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

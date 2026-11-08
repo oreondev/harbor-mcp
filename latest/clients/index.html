@@ -583,6 +583,8 @@
       
         
       
+        
+      
     
     
     
@@ -671,6 +673,34 @@
     
   
     HTTP mode
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../skills/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent skills
   
 
     
@@ -1021,7 +1051,7 @@
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code>claude<span class="w"> </span>mcp<span class="w"> </span>add<span class="w"> </span>harbor<span class="w"> </span>-e<span class="w"> </span><span class="nv">HARBOR_URL</span><span class="o">=</span>https://harbor.example.com<span class="w"> </span>-e<span class="w"> </span><span class="s1">'HARBOR_USERNAME=robot$harbor-mcp'</span><span class="w"> </span>-e<span class="w"> </span><span class="nv">HARBOR_PASSWORD</span><span class="o">=</span>...<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--<span class="w"> </span>docker<span class="w"> </span>run<span class="w"> </span>-i<span class="w"> </span>--rm<span class="w"> </span>-e<span class="w"> </span>HARBOR_URL<span class="w"> </span>-e<span class="w"> </span>HARBOR_USERNAME<span class="w"> </span>-e<span class="w"> </span>HARBOR_PASSWORD<span class="w"> </span>ghcr.io/oreondev/harbor-mcp:0.1.1
+<span class="w">  </span>--<span class="w"> </span>docker<span class="w"> </span>run<span class="w"> </span>-i<span class="w"> </span>--rm<span class="w"> </span>-e<span class="w"> </span>HARBOR_URL<span class="w"> </span>-e<span class="w"> </span>HARBOR_USERNAME<span class="w"> </span>-e<span class="w"> </span>HARBOR_PASSWORD<span class="w"> </span>ghcr.io/oreondev/harbor-mcp:0.2.0
 </code></pre></div>
 <p>Or, for a <a href="../http/">shared HTTP server</a>:</p>
 <div class="highlight"><pre><span></span><code>claude<span class="w"> </span>mcp<span class="w"> </span>add<span class="w"> </span>--transport<span class="w"> </span>http<span class="w"> </span>harbor<span class="w"> </span>https://harbor-mcp.example.com/mcp<span class="w"> </span><span class="se">\</span>
@@ -1035,7 +1065,7 @@
 <span class="w">    </span><span class="nt">"harbor"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"docker"</span><span class="p">,</span>
 <span class="w">      </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"run"</span><span class="p">,</span><span class="w"> </span><span class="s2">"-i"</span><span class="p">,</span><span class="w"> </span><span class="s2">"--rm"</span><span class="p">,</span><span class="w"> </span><span class="s2">"-e"</span><span class="p">,</span><span class="w"> </span><span class="s2">"HARBOR_URL"</span><span class="p">,</span><span class="w"> </span><span class="s2">"-e"</span><span class="p">,</span><span class="w"> </span><span class="s2">"HARBOR_USERNAME"</span><span class="p">,</span><span class="w"> </span><span class="s2">"-e"</span><span class="p">,</span><span class="w"> </span><span class="s2">"HARBOR_PASSWORD"</span><span class="p">,</span>
-<span class="w">               </span><span class="s2">"ghcr.io/oreondev/harbor-mcp:0.1.1"</span><span class="p">],</span>
+<span class="w">               </span><span class="s2">"ghcr.io/oreondev/harbor-mcp:0.2.0"</span><span class="p">],</span>
 <span class="w">      </span><span class="nt">"env"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="nt">"HARBOR_URL"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://harbor.example.com"</span><span class="p">,</span>
 <span class="w">        </span><span class="nt">"HARBOR_USERNAME"</span><span class="p">:</span><span class="w"> </span><span class="s2">"robot$harbor-mcp"</span><span class="p">,</span>
@@ -1057,7 +1087,7 @@
 <span class="w">      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"stdio"</span><span class="p">,</span>
 <span class="w">      </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"docker"</span><span class="p">,</span>
 <span class="w">      </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"run"</span><span class="p">,</span><span class="w"> </span><span class="s2">"-i"</span><span class="p">,</span><span class="w"> </span><span class="s2">"--rm"</span><span class="p">,</span><span class="w"> </span><span class="s2">"-e"</span><span class="p">,</span><span class="w"> </span><span class="s2">"HARBOR_URL"</span><span class="p">,</span><span class="w"> </span><span class="s2">"-e"</span><span class="p">,</span><span class="w"> </span><span class="s2">"HARBOR_USERNAME"</span><span class="p">,</span><span class="w"> </span><span class="s2">"-e"</span><span class="p">,</span><span class="w"> </span><span class="s2">"HARBOR_PASSWORD"</span><span class="p">,</span>
-<span class="w">               </span><span class="s2">"ghcr.io/oreondev/harbor-mcp:0.1.1"</span><span class="p">],</span>
+<span class="w">               </span><span class="s2">"ghcr.io/oreondev/harbor-mcp:0.2.0"</span><span class="p">],</span>
 <span class="w">      </span><span class="nt">"env"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="nt">"HARBOR_URL"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://harbor.example.com"</span><span class="p">,</span>
 <span class="w">        </span><span class="nt">"HARBOR_USERNAME"</span><span class="p">:</span><span class="w"> </span><span class="s2">"robot$harbor-mcp"</span><span class="p">,</span>
