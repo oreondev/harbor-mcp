@@ -34,6 +34,8 @@ Changes per release are in the [release notes](CHANGELOG.md). The read tools wor
 | `harbor_list_skills`, `harbor_get_skill` | agent skills stored in a project as OCI artifacts; one skill's `SKILL.md` and files, digest and signature status |
 | `harbor_install_skill` | installs a skill into `HARBOR_MCP_SKILLS_DIR` (registered only when that is set) |
 
+Pushing, signing and installing skills, and the extra pull permission reading them needs: [docs/skills.md](docs/skills.md).
+
 ## Set up a read-only Harbor identity
 
 Run the server as a system robot account that can only read. [docs/read-only-robot.json](docs/read-only-robot.json) is the request body for Harbor's API, with the permissions the tools need (the end-to-end tests use the same file):

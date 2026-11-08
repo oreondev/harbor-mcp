@@ -90,7 +90,7 @@ func (t *tools) fail(what string, err error) error {
 	if apiErr, ok := asAPIError(err); ok {
 		msg = fmt.Sprintf("%s: Harbor answered %d", what, apiErr.StatusCode)
 		if apiErr.Message != "" {
-			msg += ": " + apiErr.Message
+			msg += ": " + strings.TrimSuffix(apiErr.Message, ".")
 		}
 		if hint := hints[apiErr.StatusCode]; hint != "" {
 			msg += ". " + hint
