@@ -1,0 +1,37 @@
+{
+  "name": "harbor-mcp",
+  "displayName": "Harbor MCP",
+  "version": "0.2.0",
+  "description": "Ask about your Harbor container registry in plain language: vulnerable images, quotas, robot accounts, members, replication, garbage collection and agent skills. Read-only towards Harbor; secrets never reach the model. Community project, not affiliated with the Harbor project or the CNCF.",
+  "author": {
+    "name": "Oreon IT"
+  },
+  "homepage": "https://www.oreonit.com/harbor-mcp/",
+  "repository": "https://github.com/oreondev/harbor-mcp",
+  "license": "Apache-2.0",
+  "keywords": ["harbor", "container-registry", "oci", "vulnerabilities", "kubernetes", "devops", "security", "agent-skills"],
+  "logo": "docs/images/oreon-avatar-512.png",
+  "skills": "skills",
+  "mcpServers": "mcp.json",
+  "variables": {
+    "type": "object",
+    "properties": {
+      "HARBOR_URL": {
+        "type": "string",
+        "title": "Harbor URL",
+        "description": "Harbor base URL, for example https://harbor.example.com"
+      },
+      "HARBOR_USERNAME": {
+        "type": "string",
+        "title": "Harbor robot name",
+        "description": "A read-only system robot, for example robot$harbor-mcp; see https://www.oreonit.com/harbor-mcp/latest/read-only-robot/"
+      },
+      "HARBOR_PASSWORD": {
+        "type": "string",
+        "title": "Harbor robot secret",
+        "description": "The robot's secret, shown once by Harbor when the robot is created"
+      }
+    },
+    "required": ["HARBOR_URL", "HARBOR_USERNAME", "HARBOR_PASSWORD"]
+  }
+}
