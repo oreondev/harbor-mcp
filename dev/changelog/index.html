@@ -1181,6 +1181,9 @@
 <h1 id="changelog">Changelog<a class="headerlink" href="#changelog" title="Permanent link">&para;</a></h1>
 <p>All notable changes are listed here, newest first. Versions follow <a href="https://semver.org">semantic versioning</a>. Each release also has a <a href="https://github.com/oreondev/harbor-mcp/releases">GitHub release</a> with the image digest, binaries and signed checksums.</p>
 <h2 id="unreleased">Unreleased<a class="headerlink" href="#unreleased" title="Permanent link">&para;</a></h2>
+<ul>
+<li>The repository is a Cursor plugin: <code>.cursor-plugin/plugin.json</code> and <code>mcp.json</code> start the server from the release image, with the Harbor URL and robot credentials set in Cursor's plugin settings, and <code>skills/</code> adds three skills: vulnerability triage, access audit, and replication and garbage collection health. The release bump keeps the plugin on the current image.</li>
+</ul>
 <h2 id="020-2026-11-08">0.2.0 - 2026-11-08<a class="headerlink" href="#020-2026-11-08" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Agent skills stored in Harbor as OCI artifacts (the <a href="https://github.com/ThomasVitale/agents-skills-oci-artifacts-spec">Agent Skills OCI artifacts</a> format): <code>harbor_list_skills</code> lists the skills in a project with version, tags and whether they are signed; <code>harbor_get_skill</code> returns a skill's <code>SKILL.md</code> or another of its files, read through the manifest so the project's cosign policy applies, with size, path and link checks on the content. Reading a skill needs <code>repository:pull</code> on its project (<a href="https://github.com/oreondev/harbor-mcp/pull/20">#20</a>).</li>

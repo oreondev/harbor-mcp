@@ -541,6 +541,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Connect a client
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -557,6 +575,36 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cursor-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cursor plugin
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -979,6 +1027,25 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cursor-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cursor plugin
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1105,6 +1172,35 @@
 </div>
 </div>
 </div>
+<h2 id="cursor-plugin">Cursor plugin<a class="headerlink" href="#cursor-plugin" title="Permanent link">&para;</a></h2>
+<p>The repository is also a Cursor plugin: the server, started from the image, plus three skills that tell the assistant how to use the tools for common questions:</p>
+<table>
+<thead>
+<tr>
+<th>Skill</th>
+<th>For</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>harbor-vulnerability-triage</code></td>
+<td>the worst vulnerabilities in a project and what to fix first</td>
+</tr>
+<tr>
+<td><code>harbor-access-audit</code></td>
+<td>members, robot accounts, their permissions and expiry</td>
+</tr>
+<tr>
+<td><code>harbor-replication-health</code></td>
+<td>failed or stale replication, unhealthy registries, garbage collection</td>
+</tr>
+</tbody>
+</table>
+<p>To use it from a clone, link it into Cursor's local plugins and restart Cursor:</p>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/oreondev/harbor-mcp
+ln<span class="w"> </span>-s<span class="w"> </span><span class="s2">"</span><span class="nv">$PWD</span><span class="s2">/harbor-mcp"</span><span class="w"> </span>~/.cursor/plugins/local/harbor-mcp
+</code></pre></div>
+<p>Then set the Harbor URL, robot name and secret under <strong>Plugins</strong>, <strong>Harbor MCP</strong>, <strong>Configure</strong>; Cursor keeps them out of the plugin's files. The skills are plain <a href="https://agentskills.io/specification">Agent Skills</a>, so they also work in Claude Code and other clients that read <code>SKILL.md</code> folders.</p>
 <p>Then ask, for example, <em>"What Harbor version is this, and who am I connected as?"</em>: the assistant calls <code>harbor_system_info</code> and should answer with the version and <code>robot$harbor-mcp</code>.</p>
 <div class="admonition tip">
 <p class="admonition-title">Harbor with a private CA</p>
