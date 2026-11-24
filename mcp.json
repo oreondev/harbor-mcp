@@ -3,7 +3,7 @@
     "harbor": {
       "command": "docker",
       "args": ["run", "-i", "--rm", "-e", "HARBOR_URL", "-e", "HARBOR_USERNAME", "-e", "HARBOR_PASSWORD",
-               "ghcr.io/oreondev/harbor-mcp:0.2.0"],
+               "ghcr.io/oreondev/harbor-mcp:0.2.1"],
       "env": {
         "HARBOR_URL": "${HARBOR_URL}",
         "HARBOR_USERNAME": "${HARBOR_USERNAME}",
