@@ -1,7 +1,7 @@
 {
   "name": "harbor-mcp",
   "displayName": "Harbor MCP",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Ask about your Harbor container registry in plain language: vulnerable images, quotas, robot accounts, members, replication, garbage collection and agent skills. Read-only towards Harbor; secrets never reach the model. Community project, not affiliated with the Harbor project or the CNCF.",
   "author": {
     "name": "Oreon IT"
