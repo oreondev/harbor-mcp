@@ -4,6 +4,7 @@ All notable changes are listed here, newest first. Versions follow [semantic ver
 
 ## Unreleased
 
+- Built with Go 1.26.11, which fixes GO-2026-6859, an HTTP/1 server crash from a header race in `net/http`'s `MaxBytesReader`. It affects HTTP mode.
 - The docs home page links the [Glama listing](https://glama.ai/mcp/servers/oreondev/harbor-mcp) and counts fourteen read tools, including the two agent skill tools.
 - A client that passes an unfilled `${VAR}` placeholder (a Cursor plugin before Configure) now gets "HARBOR_URL is the placeholder ${HARBOR_URL}: set its value in the MCP client's settings" instead of a URL format error.
 - The repository is a Cursor plugin: `.cursor-plugin/plugin.json` and `mcp.json` start the server from the release image, with the Harbor URL and robot credentials set in Cursor's plugin settings, and `skills/` adds three skills: vulnerability triage, access audit, and replication and garbage collection health. The release bump keeps the plugin on the current image.
