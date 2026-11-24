@@ -25,10 +25,10 @@ Ask things like:
 
 ## Design in short
 
-- **Read-only.** Twelve tools cover projects, repositories, artifacts, vulnerabilities, robots, members, registries, replication, webhooks and garbage collection. No tool changes or deletes anything.
+- **Read-only.** Fourteen tools cover projects, repositories, artifacts, vulnerabilities, robots, members, registries, replication, webhooks, garbage collection and agent skills stored in Harbor. No tool changes or deletes anything in Harbor.
 - **Secrets stay out of the conversation.** Harbor credentials, robot secrets and webhook authorization headers never appear in tool results, logs or errors; a test enforces it.
 - **Two transports.** stdio for desktop clients, and streamable HTTP with a bearer token for running in a cluster ([HTTP mode](http.md)).
-- **Signed and listed.** A signed multi-arch image, `ghcr.io/oreondev/harbor-mcp`, listed in the official MCP Registry as `io.github.oreondev/harbor-mcp`.
+- **Signed and listed.** A signed multi-arch image, `ghcr.io/oreondev/harbor-mcp`, listed in the official MCP Registry as `io.github.oreondev/harbor-mcp` and on [Glama](https://glama.ai/mcp/servers/oreondev/harbor-mcp), which builds each release and scores its tool definitions.
 - **Tested against real Harbor.** Harbor 2.15 on every pull request and 2.12 to 2.15 nightly, as an administrator and as the read-only robot.
 
 It uses the Harbor client of the [Harbor Resource Operator](https://www.oreonit.com/harbor-operator/), the Kubernetes operator that manages Harbor projects, robot accounts and replication as code.
